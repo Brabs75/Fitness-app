@@ -497,6 +497,30 @@ svg{display:block}
 @keyframes slr{from{transform:translateX(-40px);opacity:0}to{transform:none;opacity:1}}
 .stage-box{touch-action:pan-y}
 .ver{text-align:center;font-size:12px;color:var(--dim);margin-top:18px}
+.qcard{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:16px;background:var(--surface-2)}
+.q-top{display:flex;align-items:center;gap:12px}
+.q-top b.q-lab{display:block;font:800 17px var(--f-body)}
+.q-top small{display:block;font-size:12.5px;color:var(--muted)}
+.q-score{width:62px;height:62px;flex:none;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff}
+.q-score b{font:800 26px/1 var(--f-display)}
+.q-score small{font:700 9.5px var(--f-body);opacity:.85}
+.q-ex{background:#1E8E4E}.q-ok{background:#6BAA2E}.q-md{background:#E08A1E}.q-bad{background:#D2412F}
+.q-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13.5px}
+.q-row>span,.q-add>span{font:800 11px var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.q-row em{font-style:normal;font-weight:700}
+.q-row em.warnc{color:var(--warn)}
+.ns{display:flex;gap:2px}
+.ns span{width:24px;height:26px;display:grid;place-items:center;border-radius:6px;font:800 13px var(--f-body);color:#fff;opacity:.35}
+.ns span.on{opacity:1;transform:scale(1.18);box-shadow:0 0 0 2px var(--surface-2)}
+.ns-a{background:#038141}.ns-b{background:#85BB2F}.ns-c{background:#E5A500}.ns-d{background:#EE8100}.ns-e{background:#E63E11}
+.q-add{display:flex;flex-direction:column;gap:6px}
+.q-add div{display:flex;flex-wrap:wrap;gap:5px}
+.adc{padding:4px 9px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font:700 12px var(--f-body)}
+.adc.bad{background:var(--warn-soft);border-color:transparent;color:var(--warn)}
+.adc.mid{border-color:var(--warn);color:var(--warn)}
+.adc.good{color:var(--ok)}
+.q-note{font-size:11.5px;line-height:1.4;color:var(--muted)}
+.qdot{display:inline-grid;place-items:center;min-width:26px;height:20px;padding:0 5px;margin-right:6px;border-radius:7px;font:800 11.5px/1 var(--f-body);font-style:normal;color:#fff;vertical-align:1px}
 .fl-step .btn,.fl-rev .btn{flex:none}
 .fl-step .btn-row .btn{flex:1}
 .scanbox{position:relative;border-radius:20px;overflow:hidden;background:#000;aspect-ratio:4/3;width:100%}
@@ -1525,7 +1549,7 @@ function importCode(txt){
   save();rerender();
 }
 function applyTheme(){if(!IS_PWA)return;const r=document.documentElement;if(S.theme==='light'||S.theme==='dark')r.setAttribute('data-theme',S.theme);else r.removeAttribute('data-theme');}
-const APP_VERSION='22 oct. · 6';
+const APP_VERSION='22 oct. · 7';
 function renderSettings(){
   $('appVer').textContent='Version '+APP_VERSION+(IS_PWA?(isStandalone()?' · app installée':' · navigateur'):' · app Claude');
   $('setTheme').hidden=!IS_PWA;
@@ -1661,13 +1685,13 @@ function renderJournal(){
   const ai=aiReady();
   const photoSub=ai?'repas ou étiquette':IS_PWA?'clé API à ajouter':sampleState==='pending'?'connexion…':'indisponible ici';
   $('jAdd').innerHTML=`<button type="button" data-add="photo" class="${ai?'':'off'}"><span class="ji">${FI.camera}</span><b>Photo</b><small>${photoSub}</small></button>
-    <button type="button" data-add="code" class="${IS_PWA?'':'off'}"><span class="ji">${FI.barcode}</span><b>Code-barres</b><small>${IS_PWA?'produit emballé':'app installée'}</small></button>
+    ${IS_PWA?`<button type="button" data-add="code"><span class="ji">${FI.barcode}</span><b>Code-barres</b><small>scanner un produit</small></button>`:`<button type="button" data-add="label" class="${ai?'':'off'}"><span class="ji">${FI.barcode}</span><b>Étiquette</b><small>photo de l'emballage</small></button>`}
     <button type="button" data-add="manual"><span class="ji">${FI.pencil}</span><b>Saisie</b><small>manuelle</small></button>`;
   const items=foodOf(jDay);
   if(!items.length){$('jList').innerHTML=`<p class="jempty">${jDay===t?'Rien de noté aujourd\'hui. Ajoute ton premier repas en photo, par code-barres ou à la main.':'Rien de noté ce jour-là.'}</p>`;return;}
   $('jList').innerHTML=MEALT.map(([k,lab,icn])=>{const xs=items.filter(x=>x.m===k);if(!xs.length)return '';const kc=xs.reduce((a,x)=>a+(+x.k||0),0);
     return `<section class="jmeal"><div class="jmeal-h"><span class="mi">${icn}</span><h3>${lab}</h3><span>${fmtInt(kc)}<small>kcal</small></span></div>
-      ${xs.map(x=>`<button type="button" class="jitem" data-food="${esc(x.id)}"><span style="min-width:0"><b>${esc(x.n)}</b><small>${[x.q?esc(x.q):'',`P ${fmt1(x.p)} · G ${fmt1(x.g)} · L ${fmt1(x.l)}`].filter(Boolean).join(' · ')}</small></span><span class="kc">${fmtInt(x.k)}<small>kcal</small></span></button>`).join('')}</section>`;}).join('');
+      ${xs.map(x=>`<button type="button" class="jitem" data-food="${esc(x.id)}"><span style="min-width:0"><b>${x.sc!=null?`<i class="qdot ${qLabel(x.sc)[1]}">${x.sc}</i>`:''}${esc(x.n)}</b><small>${[x.q?esc(x.q):'',`P ${fmt1(x.p)} · G ${fmt1(x.g)} · L ${fmt1(x.l)}`].filter(Boolean).join(' · ')}</small></span><span class="kc">${fmtInt(x.k)}<small>kcal</small></span></button>`).join('')}</section>`;}).join('');
 }
 
 /* add / edit sheet */
@@ -1712,6 +1736,7 @@ function renderFood(){
     ${mult?`<div class="fld"><span>Portion par rapport à la photo</span><div class="chips2">${[0.5,0.75,1,1.25,1.5,2].map(x=>`<button type="button" data-mult="${x}" class="${F.mult===x?'on':''}">×${fmtKg(x)}</button>`).join('')}</div></div>`:''}
     <div class="fld"><span>${per?'Valeurs pour cette quantité':'Valeurs nutritionnelles'}</span>${macroFields(per)}</div>
     ${per&&F.per100?`<p class="hint" style="margin:0">Pour 100 g : ${fmtInt(F.per100.k)} kcal · P ${fmt1(F.per100.p)} · G ${fmt1(F.per100.g)} · L ${fmt1(F.per100.l)}</p>`:''}
+    ${F.quality?qualityCard(F.quality):''}
     ${F.items&&F.items.length?`<div class="fl-items"><b>Ce que Claude voit</b>${F.items.map(x=>`${esc(x.nom||'')}${x.g?` (${fmtInt(+x.g||0)} g)`:''}`).join(', ')}<small>Estimation ${F.conf==='bonne'?'plutôt fiable':F.conf==='faible'?'approximative':'moyenne'} : ajuste la portion ou les valeurs si besoin.</small></div>`:''}
     ${F.note?`<p class="hint" style="margin:0">${F.note}</p>`:''}
     <button type="button" class="btn" data-f="save">${F.editId?'Enregistrer':'Ajouter au journal'}</button>
@@ -1723,7 +1748,7 @@ function setGrams(g){F.grams=Math.max(0,r1(g));F.vals=scale(F.per100,F.grams/100
 function saveFood(){
   const name=(($('fName')&&$('fName').value)||'').trim()||(F.per100?'Produit':'Repas');
   const v=F.vals||{k:0,p:0,g:0,l:0};
-  const e={id:F.editId||('f'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)),m:F.m,n:name.slice(0,80),k:Math.round(+v.k||0),p:r1(v.p),g:r1(v.g),l:r1(v.l),src:F.src||'manuel',q:F.per100?`${fmt1(F.grams)} g`:(F.mult&&F.mult!==1&&!F.editId?`portion ×${fmtKg(F.mult)}`:(F.q||'')),t:F.t||hhmm()};
+  const e={id:F.editId||('f'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)),m:F.m,n:name.slice(0,80),k:Math.round(+v.k||0),p:r1(v.p),g:r1(v.g),l:r1(v.l),src:F.src||'manuel',sc:F.quality&&F.quality.sc!=null?F.quality.sc:(F.sc??undefined),q:F.per100?`${fmt1(F.grams)} g`:(F.mult&&F.mult!==1&&!F.editId?`portion ×${fmtKg(F.mult)}`:(F.q||'')),t:F.t||hhmm()};
   const day=F.day||jDay,arr=foodOf(day).filter(x=>x.id!==e.id);arr.push(e);
   arr.sort((a,b)=>(MORDER[a.m]-MORDER[b.m])||String(a.t).localeCompare(String(b.t)));
   S.food[day]=arr;pruneFood();save();
@@ -1817,14 +1842,44 @@ async function decodeBarcode(file){
 }
 async function lookupOFF(code){
   let res;
-  try{res=await fetch(`https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(code)}.json?fields=product_name,product_name_fr,brands,nutriments,serving_quantity`);}
+  try{res=await fetch(`https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(code)}.json?fields=product_name,product_name_fr,brands,nutriments,serving_quantity,nutriscore_grade,nova_group,additives_tags,labels_tags`);}
   catch(e){throw {code:'network'};}
   let j=null;try{j=await res.json();}catch(e){}
   if(!j||j.status!==1||!j.product){if(res.ok||res.status===404)return null;throw {code:'upstream_error'};}
   const p=j.product,nu=p.nutriments||{};
   let kc=nu['energy-kcal_100g'];if(kc==null&&nu['energy_100g']!=null)kc=nu['energy_100g']/4.184;
   const brand=p.brands?String(p.brands).split(',')[0].trim():'';
-  return {nom:[p.product_name_fr||p.product_name||'',brand].filter(Boolean).join(' · ')||('Produit '+code),pour100:{k:num(kc),p:num(nu.proteins_100g),g:num(nu.carbohydrates_100g),l:num(nu.fat_100g)},portion:num(p.serving_quantity)||null,missing:kc==null};
+  return {quality:qualityOf(p),nom:[p.product_name_fr||p.product_name||'',brand].filter(Boolean).join(' · ')||('Produit '+code),pour100:{k:num(kc),p:num(nu.proteins_100g),g:num(nu.carbohydrates_100g),l:num(nu.fat_100g)},portion:num(p.serving_quantity)||null,missing:kc==null};
+}
+/* product quality: Nutri-Score 60 %, additives 30 %, organic 10 % (same principle as Yuka's published method) */
+const ADD_AVOID={e249:'Nitrite de potassium',e250:'Nitrite de sodium',e251:'Nitrate de sodium',e252:'Nitrate de potassium',e171:'Dioxyde de titane',e320:'BHA',e321:'BHT',e951:'Aspartame',e954:'Saccharine',e150c:'Caramel ammoniacal',e150d:'Caramel au sulfite d\'ammonium',e102:'Tartrazine',e104:'Jaune de quinoléine',e110:'Jaune orangé S',e122:'Azorubine',e124:'Ponceau 4R',e129:'Rouge allura'};
+const ADD_LIMIT={e211:'Benzoate de sodium',e212:'Benzoate de potassium',e220:'Dioxyde de soufre',e221:'Sulfite de sodium',e223:'Disulfite de sodium',e224:'Disulfite de potassium',e228:'Bisulfite de potassium',e338:'Acide phosphorique',e339:'Phosphates de sodium',e340:'Phosphates de potassium',e341:'Phosphates de calcium',e450:'Diphosphates',e451:'Triphosphates',e452:'Polyphosphates',e407:'Carraghénanes',e466:'Carboxyméthylcellulose',e433:'Polysorbate 80',e621:'Glutamate monosodique',e950:'Acésulfame K',e955:'Sucralose'};
+const ADD_OTHER={e300:'Vitamine C',e322:'Lécithines',e330:'Acide citrique',e202:'Sorbate de potassium',e160a:'Caroténoïdes',e412:'Gomme de guar',e415:'Gomme xanthane',e440:'Pectines',e471:'Mono- et diglycérides',e500:'Carbonates de sodium',e503:'Carbonates d\'ammonium',e270:'Acide lactique',e290:'Dioxyde de carbone',e306:'Tocophérols',e331:'Citrates de sodium',e401:'Alginate de sodium',e410:'Farine de caroube',e1422:'Amidon modifié'};
+function qualityOf(p){
+  const ns=String(p.nutriscore_grade||'').toLowerCase(),nova=+p.nova_group||null;
+  const add=(Array.isArray(p.additives_tags)?p.additives_tags:[]).map(t=>String(t).replace(/^en:/,'').toLowerCase().replace(/(\d)(iii|ii|iv|i|v)$/,'$1')).filter((x,i,a)=>/^e\d/.test(x)&&a.indexOf(x)===i);
+  const bio=(Array.isArray(p.labels_tags)?p.labels_tags:[]).some(t=>/organic|bio/.test(String(t)));
+  const nPts={a:60,b:48,c:33,d:18,e:5}[ns];
+  const avoid=add.filter(x=>ADD_AVOID[x]),limit=add.filter(x=>ADD_LIMIT[x]);
+  let sc=null;
+  if(nPts!=null){sc=nPts+(avoid.length?0:Math.max(0,30-10*limit.length))+(bio?10:0);if(avoid.length)sc=Math.min(sc,49);if(ns==='d')sc=Math.min(sc,49);if(ns==='e')sc=Math.min(sc,24);}
+  return {ns:nPts!=null?ns:null,nova,add,avoid,limit,bio,sc};
+}
+const qLabel=sc=>sc>=75?['Excellent','q-ex']:sc>=50?['Bon','q-ok']:sc>=25?['Médiocre','q-md']:['Mauvais','q-bad'];
+function qualityCard(q){
+  if(!q)return '';
+  const nsRow=`<div class="ns">${'abcde'.split('').map(l=>`<span class="ns-${l}${q.ns===l?' on':''}">${l.toUpperCase()}</span>`).join('')}</div>`;
+  const novaTxt={1:'Peu ou pas transformé',2:'Ingrédient culinaire',3:'Transformé',4:'Ultra-transformé'}[q.nova];
+  const addName=x=>ADD_AVOID[x]||ADD_LIMIT[x]||ADD_OTHER[x]||'';
+  const chips=q.add.length?q.add.map(x=>`<span class="adc${ADD_AVOID[x]?' bad':ADD_LIMIT[x]?' mid':''}">${x.toUpperCase()}${addName(x)?` · ${addName(x)}`:''}</span>`).join(''):'<span class="adc good">Aucun additif</span>';
+  const [lab,cls]=q.sc!=null?qLabel(q.sc):['',''];
+  return `<div class="qcard">
+    <div class="q-top">${q.sc!=null?`<div class="q-score ${cls}"><b>${q.sc}</b><small>/100</small></div><div><b class="q-lab">${lab}</b><small>${q.avoid.length?'Contient un additif à éviter':q.limit.length?'Contient des additifs à limiter':'Note qualité du produit'}</small></div>`:'<div><b class="q-lab">Note indisponible</b><small>Nutri-Score non renseigné pour ce produit</small></div>'}</div>
+    <div class="q-row"><span>Nutri-Score</span>${q.ns?nsRow:'<em>non renseigné</em>'}</div>
+    ${q.nova?`<div class="q-row"><span>Transformation</span><em class="${q.nova===4?'warnc':''}">NOVA ${q.nova} · ${novaTxt}</em></div>`:''}
+    <div class="q-row"><span>Bio</span><em>${q.bio?'Oui':'Non'}</em></div>
+    <div class="q-add"><span>Additifs</span><div>${chips}</div></div>
+    <p class="q-note">Données Open Food Facts. Note calculée par l'app selon le même principe que Yuka (nutrition 60 %, additifs 30 %, bio 10 %) : ce n'est pas la note officielle Yuka, et le classement des additifs est indicatif.</p></div>`;
 }
 async function runLookup(code){
   code=String(code||'').replace(/\D/g,'');
@@ -1833,7 +1888,7 @@ async function runLookup(code){
   try{
     const r=await lookupOFF(code);
     if(!r){Object.assign(F,{step:'code',err:'Produit introuvable dans Open Food Facts. Essaie la photo de l\'étiquette ou la saisie manuelle.'});renderFood();return;}
-    Object.assign(F,{step:'review',src:'code',nom:r.nom,per100:r.pour100,portion:r.portion,note:r.missing?'Les calories de ce produit ne sont pas renseignées : complète-les si tu les connais.':''});
+    Object.assign(F,{step:'review',src:'code',quality:r.quality,nom:r.nom,per100:r.pour100,portion:r.portion,note:r.missing?'Les calories de ce produit ne sont pas renseignées : complète-les si tu les connais.':''});
     setGramsSilently(r.portion||100);renderFood();
   }catch(e){Object.assign(F,{step:'code',err:e&&e.code==='network'?'Pas de connexion internet pour la recherche.':'La recherche n\'a pas abouti. Réessaie.'});renderFood();}
 }
@@ -1904,6 +1959,7 @@ $('nseg').addEventListener('click',ev=>{const b=ev.target.closest('[data-nv]');i
 $('jAdd').addEventListener('click',ev=>{
   const b=ev.target.closest('[data-add]');if(!b)return;const k=b.dataset.add;
   if(k==='manual'){openFood({step:'review',src:'manuel',vals:{k:0,p:0,g:0,l:0},nom:''});return;}
+  if(k==='label'){if(aiReady()){$('photoIn').click();}else toast(sampleState==='pending'?'Connexion à Claude, réessaie dans une seconde':'L\'analyse photo n\'est pas disponible ici');return;}
   if(k==='code'){if(IS_PWA){openFood({step:'scan'});startScan();}else openFood({step:'code'});return;}
   if(aiReady()){photoFor='meal';$('photoIn').click();return;}
   if(IS_PWA){renderSettings();openSheetEl($('settings'));setTimeout(()=>{const el=$('apiKey');if(el)el.scrollIntoView({block:'center'});},360);toast('Ajoute ta clé API pour analyser les photos');}
@@ -1911,7 +1967,7 @@ $('jAdd').addEventListener('click',ev=>{
 });
 $('jList').addEventListener('click',ev=>{
   const b=ev.target.closest('[data-food]');if(!b)return;const x=foodOf(jDay).find(y=>y.id===b.dataset.food);if(!x)return;
-  openFood({step:'review',editId:x.id,day:jDay,m:x.m,nom:x.n,vals:{k:x.k,p:x.p,g:x.g,l:x.l},src:x.src,t:x.t,q:x.q});
+  openFood({step:'review',editId:x.id,day:jDay,m:x.m,nom:x.n,vals:{k:x.k,p:x.p,g:x.g,l:x.l},src:x.src,t:x.t,q:x.q,sc:x.sc});
 });
 $('photoIn').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(f)runPhoto(f);});
 $('codeIn').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(f&&F)runScan(f);});
