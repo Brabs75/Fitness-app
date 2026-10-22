@@ -1,7 +1,7 @@
 /* Offline support: the page comes from the network when it answers quickly, otherwise from the cache. */
-const CACHE = 'programme-v2';
-const ASSETS = ['./', './index.html', './manifest.webmanifest', './icons/apple-touch-icon.png',
-  './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png'];
+const CACHE = 'programme-v3';
+const ASSETS = ['./', './index.html', './manifest.webmanifest', './apple-touch-icon.png',
+  './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
 });
