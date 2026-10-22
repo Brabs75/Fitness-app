@@ -1,5 +1,5 @@
 /* Offline support: the page comes from the network when it answers quickly, otherwise from the cache. */
-const CACHE = 'programme-v3';
+const CACHE = 'programme-v6';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './apple-touch-icon.png',
   './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 self.addEventListener('install', e => {
@@ -20,7 +20,7 @@ self.addEventListener('fetch', e => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
   if (req.mode === 'navigate') {
-    e.respondWith(withTimeout(fetch(req), 3000).then(res => {
+    e.respondWith(withTimeout(fetch(new Request(req.url, {cache: 'no-store', credentials: 'same-origin'})), 3000).then(res => {
       if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put('./index.html', copy)); }
       return res;
     }).catch(() => caches.match('./index.html').then(m => m || fetch(req))));

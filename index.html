@@ -401,6 +401,114 @@ svg{display:block}
 .empty-state b{font-size:16px;font-weight:800}
 .empty-state p{font-size:14px;color:var(--muted);max-width:34ch;line-height:1.45}
 
+/* nutrition: plan / journal */
+.seg-h.two{grid-template-columns:repeat(2,1fr)}
+.phase-row{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:18px;padding:4px;border-radius:15px;background:var(--surface-2)}
+.phase-row button{min-height:46px;border-radius:11px;font:800 13.5px/1.15 var(--f-body);color:var(--muted)}
+.phase-row button small{display:block;font:600 11px var(--f-body);margin-top:1px}
+.phase-row button.on{background:var(--surface);color:var(--ink);box-shadow:var(--card-sh)}
+.jday{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:8px;margin-top:18px}
+.jnav{width:44px;height:44px;border-radius:13px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;color:var(--ink)}
+.jnav svg{width:20px;height:20px}
+.jnav:disabled{opacity:.3}
+.jday-t{text-align:center;min-width:0}
+.jday-t b{display:block;font:800 17px var(--f-body)}
+.jday-t small{display:block;font-size:12.5px;color:var(--muted)}
+.jsum{display:grid;grid-template-columns:116px minmax(0,1fr);gap:16px;align-items:center;margin-top:12px;padding:16px;background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--card-sh)}
+.jring{position:relative;width:116px;height:116px}
+.jring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.jring .tr{fill:none;stroke:var(--surface-2);stroke-width:11}
+.jring .pr{fill:none;stroke:var(--accent);stroke-width:11;stroke-linecap:round;transition:stroke-dashoffset .5s}
+.jring .pr.over{stroke:var(--warn)}
+.jring b{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font:800 30px/1 var(--f-display);font-variant-numeric:tabular-nums}
+.jring b small{font:700 11px var(--f-body);color:var(--muted);margin-top:3px}
+.jbars{display:flex;flex-direction:column;gap:10px;min-width:0}
+.jb-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font:800 13px var(--f-body)}
+.jb-h b{font:800 17px var(--f-display);font-variant-numeric:tabular-nums}
+.jb-h b small{font:600 11px var(--f-body);color:var(--muted)}
+.jb-t{height:7px;margin-top:4px;border-radius:9px;background:var(--surface-2);overflow:hidden}
+.jb-t i{display:block;height:100%;border-radius:9px;transition:width .4s}
+.jleft{font-size:13px;color:var(--muted)}
+.jleft b{color:var(--ink)}
+.jleft.over b{color:var(--warn)}
+.jadd{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.jadd button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 6px 12px;border-radius:18px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--card-sh);text-align:center;transition:transform .15s}
+.jadd button:active{transform:scale(.97)}
+.jadd .ji{width:44px;height:44px;border-radius:14px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;margin-bottom:2px}
+.jadd .ji svg{width:24px;height:24px}
+.jadd button.off .ji{background:var(--surface-2);color:var(--dim)}
+.jadd b{font:800 14px var(--f-body)}
+.jadd small{font-size:11.5px;line-height:1.25;color:var(--muted)}
+.jmeal{margin-top:18px}
+.jmeal-h{display:flex;align-items:center;gap:10px;margin:0 2px 8px}
+.jmeal-h .mi{width:32px;height:32px;border-radius:10px}
+.jmeal-h .mi svg{width:18px;height:18px}
+.jmeal-h h3{flex:1;font:800 16px var(--f-body)}
+.jmeal-h span{font:800 18px var(--f-display);font-variant-numeric:tabular-nums}
+.jmeal-h span small{font:700 11px var(--f-body);color:var(--muted);margin-left:2px}
+.jitem{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;width:100%;padding:12px 14px;margin-bottom:6px;background:var(--surface);border:1px solid var(--line);border-radius:16px;text-align:left}
+.jitem b{display:block;font:800 14.5px/1.3 var(--f-body);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.jitem small{display:block;font-size:12px;color:var(--muted);margin-top:1px}
+.jitem .kc{font:800 20px/1 var(--f-display);font-variant-numeric:tabular-nums;text-align:right}
+.jitem .kc small{display:block;font:700 10px var(--f-body);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.jempty{margin-top:16px;padding:22px 18px;border-radius:20px;border:1.5px dashed var(--line);text-align:center;font-size:14px;color:var(--muted)}
+.fl-load{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:34px 8px 18px}
+.fl-load b{font:800 16px var(--f-body)}
+.fl-load p{font-size:13.5px;color:var(--muted)}
+.fl-load img{width:120px;height:120px;object-fit:cover;border-radius:18px}
+.spin{width:40px;height:40px;border-radius:50%;border:4px solid var(--surface-2);border-top-color:var(--accent);animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.fl-step{display:flex;flex-direction:column;gap:12px;padding-top:18px}
+.fl-step>p{font-size:14.5px;line-height:1.45;color:var(--muted)}
+.fl-or{text-align:center;font:700 12px var(--f-body);color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
+.fl-err{padding:12px 14px;border-radius:14px;background:var(--warn-soft);color:var(--warn);font-size:14px;line-height:1.4}
+.fld{display:flex;flex-direction:column;gap:6px}
+.fld>span{font:800 11px var(--f-body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.fld input{height:48px;border:1px solid var(--line);border-radius:13px;background:var(--surface-2);padding:0 14px;font:700 17px var(--f-body);color:var(--ink);width:100%}
+.fl-rev{display:flex;flex-direction:column;gap:16px;padding-top:18px}
+.fl-top{display:flex;gap:12px;align-items:center}
+.fl-top img{width:72px;height:72px;flex:none;object-fit:cover;border-radius:16px}
+.fl-top .fld{flex:1;min-width:0}
+.chips2{display:flex;flex-wrap:wrap;gap:6px}
+.chips2 button{height:38px;padding:0 13px;border-radius:999px;background:var(--surface-2);font:800 13px var(--f-body);color:var(--muted)}
+.chips2 button.on{background:var(--accent);color:var(--accent-ink)}
+.fl-mac{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.fl-mac label{display:flex;flex-direction:column;gap:4px;padding:8px 8px 6px;border-radius:13px;background:var(--surface-2)}
+.fl-mac small{font:800 10px var(--f-body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.fl-mac small i{display:inline-block;width:7px;height:7px;border-radius:2px;margin-right:4px}
+.fl-mac input{width:100%;border:0;background:none;padding:0;font:800 19px var(--f-display);color:var(--ink);font-variant-numeric:tabular-nums}
+.fl-mac input[readonly]{color:var(--ink)}
+.fl-items{padding:12px 14px;border-radius:14px;background:var(--accent-soft);font-size:13.5px;line-height:1.45}
+.fl-items b{display:block;color:var(--accent);margin-bottom:2px}
+.fl-items small{display:block;color:var(--muted);margin-top:4px}
+.step.big{height:50px;align-self:flex-start}
+.step.big input{width:64px;font-size:19px}
+.linkb{align-self:flex-start;font:800 13px var(--f-body);color:var(--accent);padding:4px 0}
+.keyin{min-height:0;height:48px;margin-top:12px;resize:none}
+.slide-cap{display:flex;justify-content:center;gap:6px;font:700 13px var(--f-body);color:var(--ink);padding-top:2px}
+.slide-cap b{color:var(--accent)}
+.sdots{display:flex;justify-content:center;gap:2px;margin-top:-2px}
+.sdots button{width:22px;height:22px;display:grid;place-items:center}
+.sdots button::before{content:"";width:7px;height:7px;border-radius:9px;background:var(--line);transition:width .2s,background .2s}
+.sdots button.on::before{width:18px;background:var(--accent)}
+.stage.sl-l{animation:sll .32s ease-out}
+.stage.sl-r{animation:slr .32s ease-out}
+@keyframes sll{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes slr{from{transform:translateX(-40px);opacity:0}to{transform:none;opacity:1}}
+.stage-box{touch-action:pan-y}
+.ver{text-align:center;font-size:12px;color:var(--dim);margin-top:18px}
+.fl-step .btn,.fl-rev .btn{flex:none}
+.fl-step .btn-row .btn{flex:1}
+.scanbox{position:relative;border-radius:20px;overflow:hidden;background:#000;aspect-ratio:4/3;width:100%}
+.scanbox video{display:block;width:100%;height:100%;object-fit:cover}
+.scan-frame{position:absolute;left:8%;right:8%;top:24%;bottom:24%;border-radius:16px;box-shadow:0 0 0 999px rgba(0,0,0,.38);outline:2.5px solid rgba(255,255,255,.92);transition:outline-color .2s}
+.scan-frame i{position:absolute;left:5%;right:5%;top:50%;height:2px;border-radius:2px;background:var(--hot);box-shadow:0 0 12px var(--hot);animation:scanl 1.5s ease-in-out infinite alternate}
+.scanbox.ok .scan-frame{outline-color:var(--ok)}
+.scanbox.ok .scan-frame i{background:var(--ok);box-shadow:0 0 12px var(--ok)}
+@keyframes scanl{from{transform:translateY(-34px)}to{transform:translateY(34px)}}
+.scan-wait{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font:700 14px var(--f-body)}
+.scan-hint{text-align:center;font-size:14px;color:var(--muted)}
+
 /* ---------- figure drawing ---------- */
 .st line,.st path{stroke-linecap:round;stroke-linejoin:round;fill:none}
 .bd{stroke:var(--fig-body)} .bdo{stroke:var(--fig-line)} .bdf{fill:var(--fig-body);stroke:var(--fig-line);stroke-width:1.4}
@@ -430,6 +538,9 @@ svg{display:block}
 @media (prefers-reduced-motion: reduce){
   .sheet,.scrim,.t-bar i,.ring-s .pr,.donut .sg{transition:none}
   .modal-card,.toast,.sh-nav button.pulse{animation:none}
+  .spin{animation-duration:2.4s}
+  .scan-frame i{animation:none}
+  .stage.sl-l,.stage.sl-r{animation:none}
 }
 </style>
 
@@ -484,10 +595,12 @@ svg{display:block}
       </div>
       <h1 class="hero-title">Ton assiette</h1>
       <p class="hero-sub">Perte de poids · sans porc · riche en protéines</p>
-      <div class="seg-h" id="phases" role="group" aria-label="Phase du programme"></div>
+      <div class="seg-h two" id="nseg" role="group" aria-label="Partie nutrition"><button type="button" data-nv="plan">Mon plan<small>objectifs et exemple</small></button><button type="button" data-nv="journal">Journal<small>ce que tu manges</small></button></div>
     </div>
   </header>
   <main class="wrap">
+    <div id="n-plan">
+    <div class="phase-row" id="phases" role="group" aria-label="Phase du programme"></div>
     <div class="macro" id="macro"></div>
     <div class="sec-h"><h2>Exemple de journée</h2><span>≈ 1 800 kcal</span></div>
     <div id="meals"></div>
@@ -495,6 +608,17 @@ svg{display:block}
     <div class="sec-h"><h2>Compléments</h2></div>
     <div id="supps"></div>
     <p class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/><path d="M12 8v5M12 16.5v.01"/></svg><span>Repères indicatifs : suis en priorité les consignes de ton équipe médicale, et mange même si l'appétit est coupé par le traitement.</span></p>
+    </div>
+    <div id="n-journal" hidden>
+      <div class="jday">
+        <button type="button" class="jnav" id="jPrev" aria-label="Jour précédent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <div class="jday-t"><b id="jDate">Aujourd'hui</b><small id="jDate2"></small></div>
+        <button type="button" class="jnav" id="jNext" aria-label="Jour suivant"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+      </div>
+      <div class="jsum" id="jSum"></div>
+      <div class="jadd" id="jAdd"></div>
+      <div id="jList"></div>
+    </div>
   </main>
 </section>
 
@@ -517,7 +641,9 @@ svg{display:block}
     </div>
     <div class="sh-body" id="shBody">
       <div class="stage-box">
+        <div class="slide-cap" id="slideCap" hidden></div>
         <svg id="stage" class="stage st" viewBox="0 0 320 210" aria-hidden="true"></svg>
+        <div class="sdots" id="sdots" hidden></div>
         <div class="mus" id="mus"></div>
       </div>
       <div class="pad">
@@ -588,6 +714,15 @@ svg{display:block}
             </div>
           </div>
         </div>
+        <div class="set-sec" id="setAI" hidden>
+          <h3>Analyse des photos</h3>
+          <div class="card2">
+            <p>Pour analyser tes photos de repas, l'app utilise Claude avec ta propre clé API Anthropic (console.anthropic.com). La clé reste sur cet appareil, et chaque analyse est facturée sur ton compte API.</p>
+            <input class="code keyin" id="apiKey" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="sk-ant-…" aria-label="Clé API Anthropic">
+            <div class="btn-row"><button class="btn" type="button" id="apiSave">Enregistrer la clé</button><button class="btn ghost" type="button" id="apiDel">Supprimer</button></div>
+            <div class="sync" id="apiState" style="margin-top:10px"></div>
+          </div>
+        </div>
         <div class="set-sec" id="setTheme" hidden>
           <h3>Apparence</h3>
           <div class="seg3" id="themeSeg" role="group" aria-label="Thème">
@@ -603,10 +738,25 @@ svg{display:block}
             <div class="btn-row"><button class="btn warn" type="button" id="resetAll">Tout décocher</button></div>
           </div>
         </div>
+        <p class="ver" id="appVer"></p>
       </div>
     </div>
   </div>
 </div>
+
+<div class="sheet-wrap" id="foodSheet" hidden>
+  <div class="scrim" data-close></div>
+  <div class="sheet fit" role="dialog" aria-modal="true" aria-labelledby="foodTitle">
+    <div class="sh-head">
+      <span class="grab"></span>
+      <div class="sh-title"><small id="foodKicker">Journal</small><h2 id="foodTitle">Ajouter</h2></div>
+      <button class="x" type="button" data-close aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="sh-body"><div class="pad" id="foodBody"></div></div>
+  </div>
+</div>
+<input type="file" id="photoIn" accept="image/*" hidden>
+<input type="file" id="codeIn" accept="image/*" hidden>
 
 <div class="modal" id="doneModal" hidden>
   <div class="scrim" data-close-modal></div>
@@ -922,11 +1072,23 @@ const DAYS=[
  {id:'mobi',name:'Mobilité complète',rest:0,kg:false,hl:[],mus:['Colonne','Hanches','Chaîne postérieure'],
   sets:[{label:'Respiration diaphragmatique',v:'3',u:'min'},{label:'Cercles de hanches debout',v:'3',u:'min'},{label:'Étirement piriforme (figure 4)',v:'3',u:'min'},{label:'Fléchisseurs de hanche',v:'3',u:'min'},{label:'Chat-vache',v:'3',u:'min'},{label:'Mollets et ischios',v:'3',u:'min'},{label:'Respiration finale',v:'2',u:'min'}],
   tip:'<b>Le piriforme</b> comprime souvent le nerf sciatique : cet étirement est le plus important de la séance.',
-  exec:['Enchaîne les 7 blocs dans l\'ordre, sans forcer.','Chat-vache (animation) : arrondis le dos en expirant, puis creuse doucement en inspirant.','Étirements tenus en respirant lentement, jamais de rebond.'],
+  exec:['Enchaîne les 7 blocs dans l\'ordre, sans forcer. Fais glisser l\'animation vers la gauche pour voir le bloc suivant.','Respiration : une main sur le ventre, gonfle le ventre en inspirant par le nez, vide-le en expirant lentement.','Chat-vache : arrondis le dos en expirant, puis creuse doucement en inspirant.','Étirements tenus en respirant lentement, jamais de rebond.'],
   safe:['Un étirement tire mais ne fait jamais mal.','Pas d\'étirement nerveux agressif (jambe tendue tirée fort vers soi).'],
-  anim:{dur:4,A:{hip:[120,136],torso:-10,thA:88,shA:176,foot:180,hand:[182,190],head:60,bend:10},
-        B:{hip:[120,136],torso:-10,thA:88,shA:176,foot:180,hand:[182,190],head:-50,bend:-7},
-        back:()=>G()}}
+  slides:[
+   {name:'Respiration diaphragmatique',hl:['abs'],anim:{dur:5,A:{hip:[180,180],torso:180,ank:[236,189],foot:0,hand:[150,168],head:184,bend:0},B:{hip:[180,180],torso:180,ank:[236,189],foot:0,hand:[150,163],head:184,bend:-5},back:()=>G()+B([40,194],[290,194],4,'pd')}},
+   {name:'Cercles de hanches debout',hl:['glutes'],anim:{loop:true,dur:3,render:(p)=>{const th=p*2*Math.PI,hip=[152+9*Math.cos(th),101+3*Math.sin(th)];
+     const J=solve({hip,torso:-90-5*Math.cos(th),ank:[158,189],ank2:[146,187],foot:0,foot2:0,hand:add(hip,[10,-14]),hand2:add(hip,[2,-16]),head:-90+3*Math.cos(th)});
+     return G().replace('<!--SH-->',SHD(152,40))+figure(J,['glutes']);}}},
+   {name:'Étirement piriforme (figure 4)',hl:['glutes'],anim:{dur:4,render:(p)=>{const base={hip:[182,180],torso:180,head:184,thA:-58-16*p,shA:8-8*p,foot:-80};
+     const J0=solve(Object.assign({},base,{hand:[150,170]})),kn=J0.L1.kn,h=lp(J0.hip,kn,.6);
+     const J=solve(Object.assign({},base,{ank2:add(kn,[-2,-6]),foot2:-20,hand:h,hand2:add(h,[4,-3])}));
+     return G().replace('<!--SH-->','')+B([40,194],[290,194],4,'pd')+figure(J,['glutes']);}}},
+   {name:'Fléchisseurs de hanche',hl:['quads'],anim:{dur:4,A:{hip:[146,146],torso:-92,ank:[98,190],foot:178,ank2:[204,189],foot2:0,hand:[196,136],hand2:[192,134],head:-90},B:{hip:[160,149],torso:-96,ank:[98,190],foot:178,ank2:[204,189],foot2:0,hand:[200,138],hand2:[196,136],head:-92},back:()=>G()+B([84,195],[176,195],4,'pd')}},
+   {name:'Chat-vache',hl:[],anim:{dur:4,A:{hip:[120,136],torso:-10,thA:88,shA:176,foot:180,hand:[182,190],head:60,bend:10},B:{hip:[120,136],torso:-10,thA:88,shA:176,foot:180,hand:[182,190],head:-50,bend:-7},back:()=>G()}},
+   {name:'Mollets et ischios',hl:['calves'],anim:{dur:4,A:{hip:[160,104],torso:-74,ank:[112,189],foot:0,ank2:[204,189],foot2:0,hand:[238,76],hand2:[236,72],head:-80},B:{hip:[170,110],torso:-64,ank:[112,189],foot:0,ank2:[204,189],foot2:0,hand:[238,76],hand2:[236,72],head:-70},back:()=>G()+B([252,14],[252,194],10,'mt')}},
+   {name:'Respiration finale',hl:[],anim:{dur:5,A:{hip:[112,168],torso:-8,thA:18,shA:180,foot:180,hand:[244,186],head:30,bend:3},B:{hip:[112,166],torso:-12,thA:18,shA:180,foot:180,hand:[244,186],head:26,bend:-3},back:()=>G()}}
+  ],
+  get anim(){return this.slides[0].anim;}}
 ]}
 ];
 const ALL={};DAYS.forEach(d=>d.ex.forEach((e,i)=>{ALL[e.id]={ex:e,day:d,i};}));
@@ -985,11 +1147,12 @@ function weekKeys(){const d=new Date(),dow=(d.getDay()+6)%7;return Array.from({l
 
 /* ================= STATE ================= */
 const KEY='fitplan-v2';
-const DEFAULTS=()=>({done:{},kg:{},dt:{},log:[],hist:{},day:'j1',tab:'muscu',phase:'debut',theme:'auto',hideInstall:false,ts:0});
+const DEFAULTS=()=>({done:{},kg:{},dt:{},log:[],hist:{},food:{},nview:'plan',day:'j1',tab:'muscu',phase:'debut',theme:'auto',hideInstall:false,ts:0});
 let S=DEFAULTS();
 try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(DEFAULTS(),JSON.parse(r));}catch(e){}
 if(!Array.isArray(S.log))S.log=[];
 if(!S.hist||typeof S.hist!=='object')S.hist={};
+if(!S.food||typeof S.food!=='object')S.food={};
 const writeLocal=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
 const save=()=>{S.ts=Date.now();writeLocal();queueRemote();};
 const isDone=(e,i)=>!!(S.done[e.id]&&S.done[e.id][i]);
@@ -1042,7 +1205,7 @@ async function initRemote(){
     const snap=await ref.get();
     remote=ref;
     const d=snap.exists?snap.data():null;
-    if(d&&(d.ts||0)>(S.ts||0)){S=Object.assign(DEFAULTS(),JSON.parse(JSON.stringify(d)));if(!Array.isArray(S.log))S.log=[];if(!S.hist||typeof S.hist!=='object')S.hist={};writeLocal();rerender();setSync('cloud');}
+    if(d&&(d.ts||0)>(S.ts||0)){S=Object.assign(DEFAULTS(),JSON.parse(JSON.stringify(d)));if(!Array.isArray(S.log))S.log=[];if(!S.hist||typeof S.hist!=='object')S.hist={};if(!S.food||typeof S.food!=='object')S.food={};writeLocal();rerender();setSync('cloud');}
     else if(S.ts&&(!d||S.ts>(d.ts||0)))flushRemote();
     else setSync('cloud');
   }catch(e){setSync(fallback);}
@@ -1177,7 +1340,7 @@ function chartHover(svg,clientX){
 function chartLeave(svg){const tip=svg.parentNode.querySelector('.ch-tip');if(tip)tip.hidden=true;const hv=svg.querySelector('.ch-hover');if(hv)hv.remove();}
 
 /* ================= SHEETS ================= */
-const anySheetOpen=()=>!$('sheet').hidden||!$('settings').hidden;
+const anySheetOpen=()=>!$('sheet').hidden||!$('settings').hidden||!$('foodSheet').hidden;
 function openSheetEl(w){
   if(w._ct){clearTimeout(w._ct);w._ct=0;w.hidden=false;requestAnimationFrame(()=>w.classList.add('open'));document.documentElement.classList.add('lock');renderCta();return;}
   if(!w.hidden)return;
@@ -1188,6 +1351,7 @@ function openSheetEl(w){
 }
 function closeSheetEl(w,after){
   if(w.hidden)return;
+  if(w.id==='foodSheet')stopScan();
   w.classList.remove('open');
   w._ct=setTimeout(()=>{w._ct=0;w.hidden=true;if(!anySheetOpen())document.documentElement.classList.remove('lock');if(w.id==='sheet')cur=null;after&&after();renderCta();syncRest();},320);
 }
@@ -1200,7 +1364,23 @@ function dragToClose(w){
   hd.addEventListener('touchend',end);hd.addEventListener('touchcancel',end);
 }
 
-let cur=null,t0=performance.now();
+let cur=null,t0=performance.now(),curSlide=0;
+const slideOf=ex=>ex.slides?ex.slides[Math.min(curSlide,ex.slides.length-1)]:ex;
+function renderSlideUI(){
+  const ex=cur&&cur.ex,cap=$('slideCap'),dots=$('sdots');
+  if(!ex||!ex.slides){cap.hidden=true;dots.hidden=true;return;}
+  const sl=ex.slides[curSlide];cap.hidden=false;dots.hidden=false;
+  cap.innerHTML=`<b>${curSlide+1}/${ex.slides.length}</b> ${sl.name}`;
+  dots.innerHTML=ex.slides.map((s,i)=>`<button type="button" class="${i===curSlide?'on':''}" data-slide="${i}" aria-label="${s.name}"></button>`).join('');
+  $('mus').hidden=true;
+}
+function goSlide(i,dirn){
+  const ex=cur&&cur.ex;if(!ex||!ex.slides)return;
+  const n2=Math.max(0,Math.min(ex.slides.length-1,i));if(n2===curSlide)return;
+  const d=dirn||(n2>curSlide?1:-1);curSlide=n2;t0=performance.now();
+  const st=$('stage');st.classList.remove('sl-l','sl-r');void st.getBoundingClientRect();st.classList.add(d>0?'sl-l':'sl-r');
+  st.innerHTML=drawEx(slideOf(ex),0);renderSlideUI();
+}
 function factsHtml(e){
   const s0=e.sets[0];let f1,f2;
   if(s0.label){f1=['Blocs',e.sets.length,''];f2=['Durée',e.sets.reduce((a,x)=>a+(parseFloat(x.v)||0),0),'min'];}
@@ -1226,7 +1406,10 @@ function openEx(id){
   $('nextEx').classList.remove('pulse');
   $('shBody').scrollTop=0;
   t0=performance.now();
-  $('stage').innerHTML=drawEx(e,0);
+  curSlide=e.slides?Math.max(0,e.sets.findIndex((_,k)=>!isDone(e,k))):0;
+  $('mus').hidden=false;
+  $('stage').innerHTML=drawEx(slideOf(e),0);
+  renderSlideUI();
   openSheetEl($('sheet'));
   syncRest();keepAwake();
 }
@@ -1267,6 +1450,7 @@ function toggleSet(i){
   const finishedDay=updateLog(cur.day);
   save();renderSets();renderHome();
   if(!arr[i])return;
+  if(e.slides){const nx=e.sets.findIndex((_,k)=>!isDone(e,k));if(nx>=0)goSlide(nx,1);}
   if(finishedDay){stopRest();setTimeout(()=>showDone(cur?cur.day:curDay()),350);return;}
   const next=e.sets.findIndex((_,k)=>!isDone(e,k));
   if(next===-1){stopRest();$('nextEx').classList.add('pulse');toast(cur.i===cur.day.ex.length-1?'Dernier exercice terminé':'Exercice terminé');return;}
@@ -1331,18 +1515,22 @@ function toast(t){const el=$('toast');el.textContent=t;el.hidden=true;void el.of
 /* ================= SETTINGS ================= */
 function b64e(str){const by=new TextEncoder().encode(str);let bin='';for(let i=0;i<by.length;i++)bin+=String.fromCharCode(by[i]);return btoa(bin);}
 function b64d(b){const bin=atob(b),by=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)by[i]=bin.charCodeAt(i);return new TextDecoder().decode(by);}
-const exportCode=()=>'PROGRAMME1:'+b64e(JSON.stringify({v:1,done:S.done,kg:S.kg,dt:S.dt,log:S.log,hist:S.hist,phase:S.phase}));
+const exportCode=()=>'PROGRAMME1:'+b64e(JSON.stringify({v:1,done:S.done,kg:S.kg,dt:S.dt,log:S.log,hist:S.hist,food:S.food,phase:S.phase}));
 function importCode(txt){
   const m=String(txt).replace(/\s+/g,'').match(/^PROGRAMME1:([A-Za-z0-9+/=]+)$/);
   if(!m)throw new Error('format');
   const o=JSON.parse(b64d(m[1]));
   if(!o||typeof o!=='object'||!o.kg||typeof o.kg!=='object')throw new Error('format');
-  S=Object.assign(DEFAULTS(),S,{done:o.done&&typeof o.done==='object'?o.done:{},kg:o.kg,dt:o.dt&&typeof o.dt==='object'?o.dt:{},log:Array.isArray(o.log)?o.log.filter(x=>x&&typeof x.d==='string'&&typeof x.t==='string'):[],hist:o.hist&&typeof o.hist==='object'?o.hist:{},phase:PH[o.phase]?o.phase:S.phase});
+  S=Object.assign(DEFAULTS(),S,{done:o.done&&typeof o.done==='object'?o.done:{},kg:o.kg,dt:o.dt&&typeof o.dt==='object'?o.dt:{},log:Array.isArray(o.log)?o.log.filter(x=>x&&typeof x.d==='string'&&typeof x.t==='string'):[],hist:o.hist&&typeof o.hist==='object'?o.hist:{},food:o.food&&typeof o.food==='object'?o.food:{},phase:PH[o.phase]?o.phase:S.phase});
   save();rerender();
 }
 function applyTheme(){if(!IS_PWA)return;const r=document.documentElement;if(S.theme==='light'||S.theme==='dark')r.setAttribute('data-theme',S.theme);else r.removeAttribute('data-theme');}
+const APP_VERSION='22 oct. · 6';
 function renderSettings(){
+  $('appVer').textContent='Version '+APP_VERSION+(IS_PWA?(isStandalone()?' · app installée':' · navigateur'):' · app Claude');
   $('setTheme').hidden=!IS_PWA;
+  $('setAI').hidden=!IS_PWA;
+  if(IS_PWA){const k=(()=>{try{return localStorage.getItem('fitplan-apikey')||'';}catch(e){return '';}})();$('apiState').className='sync'+(k?' ok':'');$('apiState').innerHTML=k?`${I.check}<span>Clé enregistrée (…${esc(k.slice(-4))})</span>`:'<span>Aucune clé enregistrée</span>';$('apiDel').hidden=!k;}
   $('setInstall').hidden=!(IS_PWA&&!isStandalone());
   document.querySelectorAll('[data-theme-set]').forEach(b=>{const on=b.dataset.themeSet===(S.theme||'auto');b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);});
 }
@@ -1396,6 +1584,14 @@ $('sets').addEventListener('click',ev=>{
   v=inc?v+step:Math.max(0,v-step);v=Math.round(v*4)/4;
   inp.value=fmtKg(v);storeKg(i,inp.value,j);
 });
+$('sets').addEventListener('click',ev=>{const r=ev.target.closest('.set-n');if(!r||!cur||!cur.ex.slides)return;const rows=[...$('sets').querySelectorAll('.set')],i=rows.indexOf(r.closest('.set'));if(i>=0){goSlide(i);$('shBody').scrollTo({top:0,behavior:'smooth'});}});
+(()=>{const box=document.querySelector('#sheet .stage-box');let x0=null,y0=0;
+  box.addEventListener('touchstart',e=>{if(!cur||!cur.ex.slides)return;x0=e.touches[0].clientX;y0=e.touches[0].clientY;},{passive:true});
+  box.addEventListener('touchend',e=>{if(x0==null)return;const t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0;x0=null;if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)*1.3)goSlide(curSlide+(dx<0?1:-1),dx<0?1:-1);},{passive:true});
+  box.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'||!cur||!cur.ex.slides)return;x0=e.clientX;y0=e.clientY;});
+  box.addEventListener('pointerup',e=>{if(e.pointerType==='touch'||x0==null)return;const dx=e.clientX-x0;x0=null;if(Math.abs(dx)>40)goSlide(curSlide+(dx<0?1:-1),dx<0?1:-1);});
+  $('sdots').addEventListener('click',e=>{const b=e.target.closest('[data-slide]');if(b)goSlide(+b.dataset.slide);});
+})();
 $('sets').addEventListener('input',ev=>{const inp=ev.target.closest('[data-kg]');if(!inp||!cur)return;const j=inp.dataset.part===''?null:+inp.dataset.part;storeKg(+inp.dataset.kg,inp.value.replace(/[^0-9.,]/g,''),j);});
 $('sets').addEventListener('keydown',ev=>{if(ev.key==='Enter'&&ev.target.matches('[data-kg]'))ev.target.blur();});
 document.querySelectorAll('.sheet-wrap').forEach(w=>{w.addEventListener('click',ev=>{if(ev.target.closest('[data-close]'))closeSheetEl(w);});dragToClose(w);});
@@ -1403,19 +1599,355 @@ document.querySelectorAll('[data-settings]').forEach(b=>b.addEventListener('clic
 $('doneModal').addEventListener('click',ev=>{if(ev.target.closest('[data-close-modal]'))$('doneModal').hidden=true;});
 $('prevEx').onclick=()=>{if(cur&&cur.i>0)openEx(cur.day.ex[cur.i-1].id);};
 $('nextEx').onclick=()=>{if(!cur)return;if(cur.i<cur.day.ex.length-1)openEx(cur.day.ex[cur.i+1].id);else closeSheetEl($('sheet'));};
-document.addEventListener('keydown',ev=>{if(ev.key!=='Escape')return;if(!$('doneModal').hidden){$('doneModal').hidden=true;return;}if(!$('settings').hidden)closeSheetEl($('settings'));else if(!$('sheet').hidden)closeSheetEl($('sheet'));});
+document.addEventListener('keydown',ev=>{if(ev.key!=='Escape')return;if(!$('doneModal').hidden){$('doneModal').hidden=true;return;}if(!$('foodSheet').hidden)closeSheetEl($('foodSheet'));else if(!$('settings').hidden)closeSheetEl($('settings'));else if(!$('sheet').hidden)closeSheetEl($('sheet'));});
 
 $('progList').addEventListener('pointermove',ev=>{const svg=ev.target.closest('svg.ch');if(svg)chartHover(svg,ev.clientX);});
 $('progList').addEventListener('pointerdown',ev=>{const svg=ev.target.closest('svg.ch');if(svg)chartHover(svg,ev.clientX);});
 $('progList').addEventListener('pointerout',ev=>{const svg=ev.target.closest('svg.ch');if(svg&&!svg.contains(ev.relatedTarget))chartLeave(svg);});
 
+/* ================= FOOD JOURNAL ================= */
+const ZX_URL='https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js';
+const AI_MODEL='claude-sonnet-5-5';
+const KEY_API='fitplan-apikey';
+const FI={
+  camera:ic('<path d="M4 8.5h3l1.6-2.5h6.8L17 8.5h3v10.5H4z"/><circle cx="12" cy="13.5" r="3.6"/>'),
+  barcode:ic('<path d="M4 6v12M7 6v12M10.5 6v12M13 6v12M16.5 6v12M20 6v12"/>',2),
+  pencil:ic('<path d="M4 20l4.5-1 10-10a2.1 2.1 0 0 0-3-3l-10 10z"/><path d="M14 7l3 3"/>')
+};
+const MEALT=[['pdj','Petit-déjeuner',I.sunrise],['dej','Déjeuner',I.sun],['col','Collation',I.bolt],['din','Dîner',I.moon]];
+const MORDER={pdj:0,dej:1,col:2,din:3};
+const nowMeal=()=>{const d=new Date(),h=d.getHours()+d.getMinutes()/60;return h<10.5?'pdj':h<15?'dej':h<18.5?'col':'din';};
+const hhmm=()=>{const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');};
+const r1=v=>Math.round((+v||0)*10)/10;
+const num=v=>{const x=parseKg(v);return x==null?0:x;};
+const fmt1=v=>fmtKg(r1(v));
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const shiftDay=(k,dd)=>{const d=fromKey(k);return dkey(new Date(d.getFullYear(),d.getMonth(),d.getDate()+dd));};
+const foodOf=k=>(S.food&&Array.isArray(S.food[k]))?S.food[k]:[];
+function sumDay(k){return foodOf(k).reduce((a,x)=>({k:a.k+(+x.k||0),p:a.p+(+x.p||0),g:a.g+(+x.g||0),l:a.l+(+x.l||0)}),{k:0,p:0,g:0,l:0});}
+function pruneFood(){const cut=shiftDay(today(),-90);Object.keys(S.food).forEach(k=>{if(k<cut||!foodOf(k).length)delete S.food[k];});}
+const getKey=()=>{try{return localStorage.getItem(KEY_API)||'';}catch(e){return '';}};
+let jDay=today(),sampleFn=null,sampleImg=false,sampleState=IS_PWA?'none':'pending';
+const aiReady=()=>IS_PWA?!!getKey():(sampleState==='ready'&&sampleImg);
+async function initSample(){
+  if(IS_PWA)return;
+  try{
+    if(!window.claude||typeof window.claude.use!=='function'){sampleState='none';renderJournal();return;}
+    const s=await window.claude.use('sample');
+    if(!s){sampleState='none';renderJournal();return;}
+    sampleFn=s;const lim=await s.limits().catch(()=>null);sampleImg=!!(lim&&lim.images);sampleState='ready';
+  }catch(e){sampleState='none';}
+  renderJournal();
+}
+
+function renderNutriView(){
+  const v=S.nview==='journal'?'journal':'plan';
+  $('n-plan').hidden=v!=='plan';$('n-journal').hidden=v!=='journal';
+  document.querySelectorAll('[data-nv]').forEach(b=>{const on=b.dataset.nv===v;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);});
+  if(v==='journal')renderJournal();
+}
+function renderJournal(){
+  if(!$('jSum'))return;
+  const t=today(),yest=shiftDay(t,-1),d=fromKey(jDay);
+  $('jDate').textContent=jDay===t?'Aujourd\'hui':jDay===yest?'Hier':cap(fmtLong(d));
+  $('jDate2').textContent=jDay===t||jDay===yest?cap(fmtLong(d)):'';
+  $('jNext').disabled=jDay>=t;
+  const s=sumDay(jDay),p=PH[S.phase]||PH.debut,R=46,CC=2*Math.PI*R,frac=Math.min(1,s.k/p.cal),over=s.k>p.cal;
+  const bar=(lab,v,goal,col)=>`<div><div class="jb-h"><span>${lab}</span><b>${fmtInt(v)}<small> / ${goal} g</small></b></div><div class="jb-t"><i style="width:${Math.min(100,goal?v/goal*100:0)}%;background:${col}"></i></div></div>`;
+  const left=p.cal-s.k;
+  $('jSum').innerHTML=`<div class="jring"><svg viewBox="0 0 112 112" aria-hidden="true"><circle class="tr" cx="56" cy="56" r="${R}"/><circle class="pr${over?' over':''}" cx="56" cy="56" r="${R}" style="stroke-dasharray:${n(CC)};stroke-dashoffset:${n(CC*(1-frac))}"/></svg><b>${fmtInt(s.k)}<small>/ ${fmtInt(p.cal)} kcal</small></b></div>
+    <div class="jbars">${bar('Protéines',s.p,p.prot,'var(--c-prot)')}${bar('Glucides',s.g,p.gluc,'var(--c-carb)')}${bar('Lipides',s.l,p.lip,'var(--c-fat)')}
+    <p class="jleft${over?' over':''}">${over?`Objectif dépassé de <b>${fmtInt(-left)} kcal</b>`:`Il te reste <b>${fmtInt(left)} kcal</b>`}</p></div>`;
+  const ai=aiReady();
+  const photoSub=ai?'repas ou étiquette':IS_PWA?'clé API à ajouter':sampleState==='pending'?'connexion…':'indisponible ici';
+  $('jAdd').innerHTML=`<button type="button" data-add="photo" class="${ai?'':'off'}"><span class="ji">${FI.camera}</span><b>Photo</b><small>${photoSub}</small></button>
+    <button type="button" data-add="code" class="${IS_PWA?'':'off'}"><span class="ji">${FI.barcode}</span><b>Code-barres</b><small>${IS_PWA?'produit emballé':'app installée'}</small></button>
+    <button type="button" data-add="manual"><span class="ji">${FI.pencil}</span><b>Saisie</b><small>manuelle</small></button>`;
+  const items=foodOf(jDay);
+  if(!items.length){$('jList').innerHTML=`<p class="jempty">${jDay===t?'Rien de noté aujourd\'hui. Ajoute ton premier repas en photo, par code-barres ou à la main.':'Rien de noté ce jour-là.'}</p>`;return;}
+  $('jList').innerHTML=MEALT.map(([k,lab,icn])=>{const xs=items.filter(x=>x.m===k);if(!xs.length)return '';const kc=xs.reduce((a,x)=>a+(+x.k||0),0);
+    return `<section class="jmeal"><div class="jmeal-h"><span class="mi">${icn}</span><h3>${lab}</h3><span>${fmtInt(kc)}<small>kcal</small></span></div>
+      ${xs.map(x=>`<button type="button" class="jitem" data-food="${esc(x.id)}"><span style="min-width:0"><b>${esc(x.n)}</b><small>${[x.q?esc(x.q):'',`P ${fmt1(x.p)} · G ${fmt1(x.g)} · L ${fmt1(x.l)}`].filter(Boolean).join(' · ')}</small></span><span class="kc">${fmtInt(x.k)}<small>kcal</small></span></button>`).join('')}</section>`;}).join('');
+}
+
+/* add / edit sheet */
+let F=null,delArmed=0;
+function openFood(st){F=Object.assign({m:nowMeal(),mult:1,day:jDay},st);delArmed=0;renderFood();openSheetEl($('foodSheet'));}
+const scale=(b,f)=>({k:(+b.k||0)*f,p:(+b.p||0)*f,g:(+b.g||0)*f,l:(+b.l||0)*f});
+function macroFields(ro){
+  const v=F.vals||{k:0,p:0,g:0,l:0};
+  const fld=(id,lab,val,col,dec)=>`<label><small>${col?`<i style="background:${col}"></i>`:''}${lab}</small><input id="${id}" data-mac="${id.slice(1).toLowerCase()}" inputmode="decimal" autocomplete="off" value="${dec?fmt1(val):fmtInt(val).replace(/\s/g,'')}"${ro?' readonly':''}></label>`;
+  return `<div class="fl-mac">${fld('fK','kcal',v.k,'',false)}${fld('fP','Prot. g',v.p,'var(--c-prot)',true)}${fld('fG','Gluc. g',v.g,'var(--c-carb)',true)}${fld('fL','Lip. g',v.l,'var(--c-fat)',true)}</div>`;
+}
+function renderFood(){
+  const b=$('foodBody');
+  $('foodTitle').textContent=F.editId?'Modifier':F.step==='code'?'Code-barres':'Ajouter';
+  $('foodKicker').textContent=cap(jDay===today()?'aujourd\'hui':fmtLong(fromKey(F.day)));
+  if(F.step==='loading'){b.innerHTML=`<div class="fl-load">${F.thumb?`<img src="${F.thumb}" alt="">`:''}<span class="spin" aria-hidden="true"></span><b>${F.msg}</b>${F.sub?`<p>${F.sub}</p>`:''}${F.ctl?'<button type="button" class="btn ghost" data-f="stop" style="flex:none;width:auto;padding:0 22px">Arrêter</button>':''}</div>`;return;}
+  if(F.step==='scan'){
+    $('foodTitle').textContent='Scanner';
+    b.innerHTML=`<div class="fl-step"><div class="scanbox" id="scanBox"><video id="scanV" playsinline muted autoplay></video><div class="scan-frame"><i></i></div><span class="scan-wait" id="scanWait">Ouverture de la caméra…</span></div>
+      <p class="scan-hint">Vise le code-barres : il est lu automatiquement.</p>
+      <div class="btn-row" style="margin-top:0"><button type="button" class="btn ghost" data-f="typecode">Saisir les chiffres</button><button type="button" class="btn ghost" data-f="scan">Prendre une photo</button></div></div>`;
+    return;}
+  if(F.step==='code'){
+    b.innerHTML=IS_PWA?`<div class="fl-step"><p>Scanne le code-barres du produit avec la caméra. Les infos viennent d'Open Food Facts.</p>
+      <button type="button" class="btn" data-f="live">${FI.barcode}Scanner avec la caméra</button>
+      <button type="button" class="btn ghost" data-f="scan">${FI.camera}Prendre le code-barres en photo</button>
+      <div class="fl-or">ou</div>
+      <label class="fld"><span>Saisir les chiffres</span><input id="fCode" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="3017620422003" value="${esc(F.code||'')}"></label>
+      <button type="button" class="btn ghost" data-f="lookup">Rechercher le produit</button>
+      ${F.err?`<p class="fl-err">${F.err}</p>`:''}</div>`
+     :`<div class="fl-step"><p>La recherche par code-barres a besoin d'internet, et l'app Claude ne le permet pas. Elle fonctionne dans l'app installée sur ton iPhone.</p>
+      ${aiReady()?`<p>Ici, photographie plutôt l'étiquette nutritionnelle du produit : Claude la lit et tu choisis la quantité.</p><button type="button" class="btn" data-f="label">${FI.camera}Photographier l'étiquette</button>`:''}
+      <button type="button" class="btn ghost" data-f="manual">Saisie manuelle</button></div>`;
+    return;}
+  if(F.step==='error'){b.innerHTML=`<div class="fl-step"><p class="fl-err">${F.err}</p>${F.retry?`<button type="button" class="btn" data-f="${F.retry}">${FI.camera}Réessayer avec une autre photo</button>`:''}<button type="button" class="btn ghost" data-f="manual">Saisie manuelle</button></div>`;return;}
+  // review
+  const per=!!F.per100,mult=F.src==='photo'&&!F.editId&&!per;
+  b.innerHTML=`<div class="fl-rev">
+    <div class="fl-top">${F.thumb?`<img src="${F.thumb}" alt="">`:''}<label class="fld"><span>Nom</span><input id="fName" autocomplete="off" value="${esc(F.nom||'')}" placeholder="Ex. poulet riz brocolis"></label></div>
+    <div class="fld"><span>Repas</span><div class="chips2">${MEALT.map(([k,l])=>`<button type="button" data-meal="${k}" class="${F.m===k?'on':''}" aria-pressed="${F.m===k}">${l}</button>`).join('')}</div></div>
+    ${per?`<div class="fld"><span>Quantité mangée</span><div class="step big"><button type="button" data-f="g-" aria-label="Moins 10 g">−</button><label><input id="fGrams" inputmode="decimal" autocomplete="off" value="${fmt1(F.grams)}" aria-label="Quantité en grammes"><span>g</span></label><button type="button" data-f="g+" aria-label="Plus 10 g">+</button></div>${F.portion?`<button type="button" class="linkb" data-f="portion">1 portion = ${fmt1(F.portion)} g</button>`:''}</div>`:''}
+    ${mult?`<div class="fld"><span>Portion par rapport à la photo</span><div class="chips2">${[0.5,0.75,1,1.25,1.5,2].map(x=>`<button type="button" data-mult="${x}" class="${F.mult===x?'on':''}">×${fmtKg(x)}</button>`).join('')}</div></div>`:''}
+    <div class="fld"><span>${per?'Valeurs pour cette quantité':'Valeurs nutritionnelles'}</span>${macroFields(per)}</div>
+    ${per&&F.per100?`<p class="hint" style="margin:0">Pour 100 g : ${fmtInt(F.per100.k)} kcal · P ${fmt1(F.per100.p)} · G ${fmt1(F.per100.g)} · L ${fmt1(F.per100.l)}</p>`:''}
+    ${F.items&&F.items.length?`<div class="fl-items"><b>Ce que Claude voit</b>${F.items.map(x=>`${esc(x.nom||'')}${x.g?` (${fmtInt(+x.g||0)} g)`:''}`).join(', ')}<small>Estimation ${F.conf==='bonne'?'plutôt fiable':F.conf==='faible'?'approximative':'moyenne'} : ajuste la portion ou les valeurs si besoin.</small></div>`:''}
+    ${F.note?`<p class="hint" style="margin:0">${F.note}</p>`:''}
+    <button type="button" class="btn" data-f="save">${F.editId?'Enregistrer':'Ajouter au journal'}</button>
+    ${F.editId?`<button type="button" class="btn warn" data-f="del">${delArmed?'Touche encore pour supprimer':'Supprimer'}</button>`:''}
+  </div>`;
+}
+function syncMacroInputs(){if(!F||!F.vals)return;[['fK','k',false],['fP','p',true],['fG','g',true],['fL','l',true]].forEach(([id,k,dec])=>{const el=$(id);if(el)el.value=dec?fmt1(F.vals[k]):String(Math.round(F.vals[k]));});}
+function setGrams(g){F.grams=Math.max(0,r1(g));F.vals=scale(F.per100,F.grams/100);const gi=$('fGrams');if(gi&&document.activeElement!==gi)gi.value=fmt1(F.grams);syncMacroInputs();}
+function saveFood(){
+  const name=(($('fName')&&$('fName').value)||'').trim()||(F.per100?'Produit':'Repas');
+  const v=F.vals||{k:0,p:0,g:0,l:0};
+  const e={id:F.editId||('f'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)),m:F.m,n:name.slice(0,80),k:Math.round(+v.k||0),p:r1(v.p),g:r1(v.g),l:r1(v.l),src:F.src||'manuel',q:F.per100?`${fmt1(F.grams)} g`:(F.mult&&F.mult!==1&&!F.editId?`portion ×${fmtKg(F.mult)}`:(F.q||'')),t:F.t||hhmm()};
+  const day=F.day||jDay,arr=foodOf(day).filter(x=>x.id!==e.id);arr.push(e);
+  arr.sort((a,b)=>(MORDER[a.m]-MORDER[b.m])||String(a.t).localeCompare(String(b.t)));
+  S.food[day]=arr;pruneFood();save();
+  const was=!!F.editId;closeSheetEl($('foodSheet'));renderJournal();toast(was?'Repas modifié':'Ajouté au journal');
+}
+function deleteFood(){const day=F.day||jDay;S.food[day]=foodOf(day).filter(x=>x.id!==F.editId);pruneFood();save();closeSheetEl($('foodSheet'));renderJournal();toast('Supprimé du journal');}
+
+/* images */
+async function loadImage(file){
+  if(window.createImageBitmap){try{return await createImageBitmap(file,{imageOrientation:'from-image'});}catch(e){}}
+  return await new Promise((ok,ko)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{ok(im);};im.onerror=()=>{URL.revokeObjectURL(u);ko(new Error('image'));};im.src=u;});
+}
+function drawTo(img,max){const w=img.width,h=img.height,sc=Math.min(1,max/Math.max(w,h)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(w*sc));c.height=Math.max(1,Math.round(h*sc));c.getContext('2d').drawImage(img,0,0,c.width,c.height);return c;}
+async function prepImage(file){
+  const img=await loadImage(file),c=drawTo(img,1280);
+  const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.85));
+  const t=drawTo(img,180).toDataURL('image/jpeg',.7);
+  return {blob,thumb:t,canvas:c};
+}
+const blobB64=b=>new Promise((ok,ko)=>{const fr=new FileReader();fr.onload=()=>ok(String(fr.result).split(',')[1]);fr.onerror=ko;fr.readAsDataURL(b);});
+
+/* photo analysis */
+const AI_PROMPT=`Tu es nutritionniste. Analyse la photo jointe, prise par quelqu'un qui note ce qu'il mange.
+- Si c'est un plat ou un repas : identifie chaque aliment, estime sa quantité en grammes, et calcule les valeurs nutritionnelles de toute la portion visible.
+- Si c'est une étiquette nutritionnelle ou un emballage : lis les valeurs pour 100 g (ou 100 ml) et la taille d'une portion si elle est indiquée.
+Réponds uniquement avec ce JSON, nombres sans unité :
+{"type":"plat","nom":"nom court en français","aliments":[{"nom":"riz basmati cuit","g":150}],"kcal":0,"proteines":0,"glucides":0,"lipides":0,"confiance":"moyenne"}
+ou pour une étiquette :
+{"type":"etiquette","nom":"nom du produit","pour100":{"kcal":0,"proteines":0,"glucides":0,"lipides":0},"portion_g":null,"confiance":"bonne"}
+"confiance" vaut "faible", "moyenne" ou "bonne". Si la photo ne montre ni nourriture ni étiquette, réponds {"type":"aucun"}.`;
+function parseJsonLoose(t){try{return JSON.parse(t);}catch(e){}const a=t.indexOf('{'),z=t.lastIndexOf('}');if(a>=0&&z>a){try{return JSON.parse(t.slice(a,z+1));}catch(e){}}return null;}
+async function analyzePhoto(blob,signal){
+  if(!IS_PWA)return await sampleFn.json(AI_PROMPT,{images:[blob],signal,cache:false});
+  const key=getKey();if(!key)throw {code:'no_key'};
+  const data=await blobB64(blob);let res;
+  try{res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',signal,headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:AI_MODEL,max_tokens:1200,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:'image/jpeg',data}},{type:'text',text:AI_PROMPT}]}]})});}
+  catch(e){if(e&&e.name==='AbortError')throw {code:'cancelled'};throw {code:'network'};}
+  if(!res.ok)throw {code:res.status===401||res.status===403?'bad_key':res.status===429||res.status===529?'rate_limited':'upstream_error'};
+  const j=await res.json(),txt=(j.content||[]).filter(x=>x.type==='text').map(x=>x.text).join('\n'),o=parseJsonLoose(txt);
+  if(!o)throw {code:'invalid_json'};return o;
+}
+function aiErr(e){const c=e&&e.code;return {not_granted:'Tu n\'as pas autorisé cette app à utiliser Claude.',sampling_disabled:'Claude n\'est pas disponible pour ton compte ici.',rate_limited:'Trop de demandes en peu de temps. Réessaie dans un moment.',image_rejected:'Cette photo n\'a pas pu être lue. Essaie avec une autre.',images_unavailable:'L\'envoi de photos n\'est pas disponible ici.',bad_key:'Ta clé API est refusée. Vérifie-la dans les réglages.',no_key:'Ajoute ta clé API dans les réglages pour analyser les photos.',network:'Pas de connexion internet pour l\'analyse.',refused:'Claude n\'a pas pu analyser cette photo.',invalid_json:'L\'analyse n\'a pas abouti. Réessaie avec une photo plus nette.'}[c]||'L\'analyse n\'a pas abouti. Réessaie dans un instant.';}
+function applyAI(r){
+  const t=r&&r.type;
+  if(t==='etiquette'&&r.pour100){const p=r.pour100;F.per100={k:num(p.kcal),p:num(p.proteines),g:num(p.glucides),l:num(p.lipides)};F.portion=num(r.portion_g)||null;F.nom=String(r.nom||'').slice(0,80);F.src='etiquette';F.step='review';setGramsSilently(F.portion||100);return;}
+  if(t==='plat'){F.base={k:num(r.kcal),p:num(r.proteines),g:num(r.glucides),l:num(r.lipides)};F.vals=Object.assign({},F.base);F.items=Array.isArray(r.aliments)?r.aliments.slice(0,12):[];F.conf=r.confiance;F.nom=String(r.nom||'').slice(0,80);F.src='photo';F.step='review';return;}
+  F.step='error';F.err='Je ne vois ni plat ni étiquette sur cette photo.';F.retry='photo';
+}
+function setGramsSilently(g){F.grams=Math.max(0,r1(g));F.vals=scale(F.per100,F.grams/100);}
+async function runPhoto(file){
+  openFood({step:'loading',msg:'Préparation de la photo…'});
+  try{
+    const {blob,thumb}=await prepImage(file);
+    const ctl=new AbortController();
+    Object.assign(F,{thumb,ctl,msg:'Claude analyse ta photo…',sub:'En général 10 à 30 secondes.'});renderFood();
+    const r=await analyzePhoto(blob,ctl.signal);
+    if(!F||F.ctl!==ctl)return;
+    F.ctl=null;applyAI(r);renderFood();
+  }catch(e){
+    if(!F)return;F.ctl=null;
+    if(e&&e.code==='cancelled'){closeSheetEl($('foodSheet'));return;}
+    F.step='error';F.err=aiErr(e);F.retry=e&&['image_rejected','invalid_json','upstream_error','refused','network'].includes(e.code)?'photo':null;renderFood();
+  }
+}
+
+/* barcode */
+let zxP=null;
+function loadZX(){
+  if(window.ZXing)return Promise.resolve(window.ZXing);
+  if(zxP)return zxP;
+  zxP=new Promise((ok,ko)=>{const s=document.createElement('script');s.src=ZX_URL;s.async=true;s.onload=()=>window.ZXing?ok(window.ZXing):ko(new Error('zx'));s.onerror=()=>{zxP=null;ko(new Error('zx'));};document.head.appendChild(s);});
+  return zxP;
+}
+function lumOf(c){const w=c.width,h=c.height,d=c.getContext('2d').getImageData(0,0,w,h).data,l=new Uint8ClampedArray(w*h);for(let i=0,j=0;i<l.length;i++,j+=4)l[i]=(d[j]*306+d[j+1]*601+d[j+2]*117)>>10;return l;}
+function rot90(c){const r=document.createElement('canvas');r.width=c.height;r.height=c.width;const x=r.getContext('2d');x.translate(r.width,0);x.rotate(Math.PI/2);x.drawImage(c,0,0);return r;}
+async function decodeBarcode(file){
+  const ZX=await loadZX(),img=await loadImage(file);
+  const hints=new Map();
+  hints.set(ZX.DecodeHintType.POSSIBLE_FORMATS,[ZX.BarcodeFormat.EAN_13,ZX.BarcodeFormat.EAN_8,ZX.BarcodeFormat.UPC_A,ZX.BarcodeFormat.UPC_E,ZX.BarcodeFormat.CODE_128]);
+  hints.set(ZX.DecodeHintType.TRY_HARDER,true);
+  const reader=new ZX.MultiFormatReader();reader.setHints(hints);
+  for(const size of [1600,1000,2400]){
+    let c=drawTo(img,size);
+    for(let r=0;r<2;r++){
+      try{const src=new ZX.RGBLuminanceSource(lumOf(c),c.width,c.height);return reader.decode(new ZX.BinaryBitmap(new ZX.HybridBinarizer(src))).getText();}catch(e){}
+      c=rot90(c);
+    }
+  }
+  return null;
+}
+async function lookupOFF(code){
+  let res;
+  try{res=await fetch(`https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(code)}.json?fields=product_name,product_name_fr,brands,nutriments,serving_quantity`);}
+  catch(e){throw {code:'network'};}
+  let j=null;try{j=await res.json();}catch(e){}
+  if(!j||j.status!==1||!j.product){if(res.ok||res.status===404)return null;throw {code:'upstream_error'};}
+  const p=j.product,nu=p.nutriments||{};
+  let kc=nu['energy-kcal_100g'];if(kc==null&&nu['energy_100g']!=null)kc=nu['energy_100g']/4.184;
+  const brand=p.brands?String(p.brands).split(',')[0].trim():'';
+  return {nom:[p.product_name_fr||p.product_name||'',brand].filter(Boolean).join(' · ')||('Produit '+code),pour100:{k:num(kc),p:num(nu.proteins_100g),g:num(nu.carbohydrates_100g),l:num(nu.fat_100g)},portion:num(p.serving_quantity)||null,missing:kc==null};
+}
+async function runLookup(code){
+  code=String(code||'').replace(/\D/g,'');
+  if(code.length<8){F.step='code';F.err='Le code doit faire 8 à 13 chiffres.';F.code=code;renderFood();return;}
+  Object.assign(F,{step:'loading',msg:'Recherche du produit…',sub:'Code '+code,ctl:null,code});renderFood();
+  try{
+    const r=await lookupOFF(code);
+    if(!r){Object.assign(F,{step:'code',err:'Produit introuvable dans Open Food Facts. Essaie la photo de l\'étiquette ou la saisie manuelle.'});renderFood();return;}
+    Object.assign(F,{step:'review',src:'code',nom:r.nom,per100:r.pour100,portion:r.portion,note:r.missing?'Les calories de ce produit ne sont pas renseignées : complète-les si tu les connais.':''});
+    setGramsSilently(r.portion||100);renderFood();
+  }catch(e){Object.assign(F,{step:'code',err:e&&e.code==='network'?'Pas de connexion internet pour la recherche.':'La recherche n\'a pas abouti. Réessaie.'});renderFood();}
+}
+async function runScan(file){
+  Object.assign(F,{step:'loading',msg:'Lecture du code-barres…',sub:'',err:''});renderFood();
+  try{const code=await decodeBarcode(file);
+    if(!code){Object.assign(F,{step:'code',err:'Code-barres illisible. Rapproche-toi, évite les reflets, ou tape les chiffres.'});renderFood();return;}
+    await runLookup(code);
+  }catch(e){Object.assign(F,{step:'code',err:'Le lecteur de code-barres n\'a pas pu se charger. Vérifie ta connexion ou tape les chiffres.'});renderFood();}
+}
+
+/* live scanner */
+let scan=null;
+function stopScan(){if(!scan)return;clearTimeout(scan.timer);try{scan.stream.getTracks().forEach(t=>t.stop());}catch(e){}scan=null;}
+async function startScan(){
+  ensureAudio();stopScan();
+  if(!F)return;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){Object.assign(F,{step:'code',err:'La caméra n\'est pas disponible ici. Prends le code-barres en photo ou tape les chiffres.'});renderFood();return;}
+  Object.assign(F,{step:'scan',err:''});renderFood();
+  const token={};scan={token,stream:null,timer:0};
+  try{
+    const [ZX,stream]=await Promise.all([loadZX(),navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}},audio:false})]);
+    if(!scan||scan.token!==token||!F||F.step!=='scan'){stream.getTracks().forEach(t=>t.stop());return;}
+    scan.stream=stream;
+    const v=$('scanV');v.srcObject=stream;await v.play().catch(()=>{});
+    const w=$('scanWait');if(w)w.hidden=true;
+    const hints=new Map();
+    hints.set(ZX.DecodeHintType.POSSIBLE_FORMATS,[ZX.BarcodeFormat.EAN_13,ZX.BarcodeFormat.EAN_8,ZX.BarcodeFormat.UPC_A,ZX.BarcodeFormat.UPC_E]);
+    const reader=new ZX.MultiFormatReader();reader.setHints(hints);
+    let det=null;try{if('BarcodeDetector' in window)det=new window.BarcodeDetector({formats:['ean_13','ean_8','upc_a','upc_e']});}catch(e){det=null;}
+    const c=document.createElement('canvas'),cx=c.getContext('2d',{willReadFrequently:true});
+    let hits={},flip=false;
+    const tick=async()=>{
+      if(!scan||scan.token!==token)return;
+      if(v.readyState>=2&&v.videoWidth){
+        const vw=v.videoWidth,vh=v.videoHeight,sw=vw*.9,sh=vh*.62,sx=(vw-sw)/2,sy=(vh-sh)/2;
+        c.width=900;c.height=Math.round(900*sh/sw);cx.drawImage(v,sx,sy,sw,sh,0,0,c.width,c.height);
+        let code=null;
+        if(det){try{const r=await det.detect(c);if(r&&r[0])code=r[0].rawValue;}catch(e){}}
+        if(!code){
+          let src=c;if(flip){src=rot90(c);}flip=!flip;
+          try{code=reader.decodeWithState(new ZX.BinaryBitmap(new ZX.HybridBinarizer(new ZX.RGBLuminanceSource(lumOf(src),src.width,src.height)))).getText();}catch(e){}
+        }
+        if(code){hits[code]=(hits[code]||0)+1;
+          if(hits[code]>=2||det){
+            if(!scan||scan.token!==token)return;
+            const box=$('scanBox');if(box)box.classList.add('ok');
+            beep(1320,.12);try{navigator.vibrate&&navigator.vibrate(80);}catch(e){}
+            stopScan();setTimeout(()=>runLookup(code),250);return;}}
+      }
+      scan.timer=setTimeout(tick,90);
+    };
+    tick();
+  }catch(e){
+    stopScan();if(!F)return;
+    const denied=e&&(e.name==='NotAllowedError'||e.name==='SecurityError');
+    Object.assign(F,{step:'code',err:denied?'L\'accès à la caméra est refusé. Autorise-le dans Réglages de l\'iPhone, puis Safari, puis Caméra. En attendant, prends une photo ou tape les chiffres.':(e&&e.message==='zx')?'Le lecteur de code-barres n\'a pas pu se charger. Vérifie ta connexion.':'La caméra n\'a pas pu démarrer. Prends une photo du code-barres ou tape les chiffres.'});
+    renderFood();
+  }
+}
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&scan){stopScan();if(F&&F.step==='scan'){F.step='code';renderFood();}}});
+
+/* events */
+let photoFor='meal';
+$('jPrev').onclick=()=>{jDay=shiftDay(jDay,-1);renderJournal();};
+$('jNext').onclick=()=>{if(jDay<today()){jDay=shiftDay(jDay,1);renderJournal();}};
+$('nseg').addEventListener('click',ev=>{const b=ev.target.closest('[data-nv]');if(!b)return;S.nview=b.dataset.nv;save();renderNutriView();});
+$('jAdd').addEventListener('click',ev=>{
+  const b=ev.target.closest('[data-add]');if(!b)return;const k=b.dataset.add;
+  if(k==='manual'){openFood({step:'review',src:'manuel',vals:{k:0,p:0,g:0,l:0},nom:''});return;}
+  if(k==='code'){if(IS_PWA){openFood({step:'scan'});startScan();}else openFood({step:'code'});return;}
+  if(aiReady()){photoFor='meal';$('photoIn').click();return;}
+  if(IS_PWA){renderSettings();openSheetEl($('settings'));setTimeout(()=>{const el=$('apiKey');if(el)el.scrollIntoView({block:'center'});},360);toast('Ajoute ta clé API pour analyser les photos');}
+  else toast(sampleState==='pending'?'Connexion à Claude, réessaie dans une seconde':'L\'analyse photo n\'est pas disponible ici');
+});
+$('jList').addEventListener('click',ev=>{
+  const b=ev.target.closest('[data-food]');if(!b)return;const x=foodOf(jDay).find(y=>y.id===b.dataset.food);if(!x)return;
+  openFood({step:'review',editId:x.id,day:jDay,m:x.m,nom:x.n,vals:{k:x.k,p:x.p,g:x.g,l:x.l},src:x.src,t:x.t,q:x.q});
+});
+$('photoIn').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(f)runPhoto(f);});
+$('codeIn').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(f&&F)runScan(f);});
+$('foodBody').addEventListener('click',ev=>{
+  const b=ev.target.closest('[data-f],[data-meal],[data-mult]');if(!b||!F)return;
+  if(b.dataset.meal){F.m=b.dataset.meal;F.nom=$('fName')?$('fName').value:F.nom;renderFood();return;}
+  if(b.dataset.mult){F.mult=+b.dataset.mult;F.vals=scale(F.base,F.mult);F.nom=$('fName')?$('fName').value:F.nom;renderFood();return;}
+  const a=b.dataset.f;
+  if(a==='stop'){if(F.ctl)F.ctl.abort();return;}
+  if(a==='scan'){stopScan();$('codeIn').click();return;}
+  if(a==='live'){startScan();return;}
+  if(a==='typecode'){stopScan();Object.assign(F,{step:'code',err:''});renderFood();return;}
+  if(a==='lookup'){runLookup($('fCode')?$('fCode').value:'');return;}
+  if(a==='photo'||a==='label'){$('photoIn').click();return;}
+  if(a==='manual'){Object.assign(F,{step:'review',src:'manuel',vals:F.vals||{k:0,p:0,g:0,l:0},per100:null,err:''});renderFood();return;}
+  if(a==='g-'||a==='g+'){setGrams((F.grams||0)+(a==='g+'?10:-10));return;}
+  if(a==='portion'){setGrams(F.portion);return;}
+  if(a==='save'){saveFood();return;}
+  if(a==='del'){if(!delArmed){delArmed=1;renderFood();setTimeout(()=>{if(delArmed&&F){delArmed=0;renderFood();}},3500);return;}deleteFood();}
+});
+$('foodBody').addEventListener('input',ev=>{
+  if(!F)return;const el=ev.target;
+  if(el.id==='fGrams'){setGrams(num(el.value));return;}
+  if(el.dataset&&el.dataset.mac){F.vals=F.vals||{k:0,p:0,g:0,l:0};F.vals[el.dataset.mac]=num(el.value);}
+});
+$('foodBody').addEventListener('keydown',ev=>{if(ev.key==='Enter'&&ev.target.id==='fCode'){ev.preventDefault();runLookup(ev.target.value);}});
+$('apiSave').onclick=()=>{const v=$('apiKey').value.trim();if(!/^sk-ant-/.test(v)){toast('Cette clé ne ressemble pas à une clé API Anthropic');return;}try{localStorage.setItem(KEY_API,v);}catch(e){}$('apiKey').value='';renderSettings();renderJournal();toast('Clé enregistrée sur cet appareil');};
+$('apiDel').onclick=()=>{try{localStorage.removeItem(KEY_API);}catch(e){}renderSettings();renderJournal();toast('Clé supprimée');};
+
 /* ================= ANIMATION LOOP ================= */
 const RM=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
 function frame(now){
   if(cur&&!$('sheet').hidden&&!document.hidden){
-    const a=cur.ex.anim,dur=(a.dur||2.8)*1000,ph=((now-t0)%dur)/dur;
+    const a=slideOf(cur.ex).anim,dur=(a.dur||2.8)*1000,ph=((now-t0)%dur)/dur;
     const p=RM?(a.loop?.15:.55):(a.loop?ph:tempo(ph));
-    $('stage').innerHTML=drawEx(cur.ex,p);
+    $('stage').innerHTML=drawEx(slideOf(cur.ex),p);
   }
   requestAnimationFrame(frame);
 }
@@ -1425,14 +1957,15 @@ requestAnimationFrame(frame);
 if(!Object.keys(S.hist).length)DAYS.forEach(d=>{const t=S.dt[d.id];if(t)d.ex.forEach(e=>recordDay(e,t));});
 $('meals').innerHTML=MEALS.map((m,i)=>foodCard(m,i===0)).join('');
 $('supps').innerHTML=SUPPS.map(m=>foodCard(m,false)).join('');
-function rerender(){applyTheme();renderHome();renderNutri();setTab(S.tab,false);if(S.tab!=='prog')renderProg();if(cur)renderSets();renderSettings();}
+function rerender(){applyTheme();renderHome();renderNutri();renderNutriView();setTab(S.tab,false);if(S.tab!=='prog')renderProg();if(cur)renderSets();renderSettings();}
 rerender();
 setSync(IS_PWA?'device':'pending');
 initRemote();
+initSample();
 if(IS_PWA&&navigator.storage&&navigator.storage.persist){try{navigator.storage.persist();}catch(e){}}
 window.__fp={DAYS,drawEx,openEx,toggleSet,showDone,S:()=>S};
 
 </script>
-<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
+<script>if('serviceWorker' in navigator){var hadSW=!!navigator.serviceWorker.controller,swReload=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(hadSW&&!swReload){swReload=true;location.reload();}});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){document.addEventListener('visibilitychange',function(){if(!document.hidden)r.update().catch(function(){});});}).catch(function(){});});}</script>
 </body>
 </html>
