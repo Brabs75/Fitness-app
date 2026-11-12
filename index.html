@@ -1072,8 +1072,10 @@ body::before{background:#000}
               <button class="btn ghost" type="button" id="importBtn">Restaurer une sauvegarde</button>
             </div>
             <div id="importBox" hidden>
-              <textarea class="code" id="importArea" placeholder="Colle ici ton code de sauvegarde" aria-label="Code à restaurer"></textarea>
-              <div class="btn-row"><button class="btn" type="button" id="importGo">Restaurer</button></div>
+              <div class="btn-row"><button class="btn" type="button" id="importPaste">Coller mon code et restaurer</button></div>
+              <textarea class="code" id="importArea" rows="4" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Ou colle ici ton code de sauvegarde" aria-label="Code à restaurer"></textarea>
+              <div class="btn-row"><button class="btn ghost" type="button" id="importGo">Restaurer ce code</button></div>
+              <p class="fl-err" id="importErr" style="margin-top:10px" hidden></p>
             </div>
           </div>
         </div>
@@ -1668,8 +1670,8 @@ async function initRemote(){
     const ref=db.doc('data/users/'+id+'/fitplan');
     const snap=await ref.get();
     remote=ref;
-    const d=snap.exists?snap.data():null;
-    if(d&&(d.ts||0)>(S.ts||0)){S=Object.assign(DEFAULTS(),JSON.parse(JSON.stringify(d)));normS();writeLocal();rerender();setSync('cloud');}
+    const d=snap.exists?snap.data():null,rich=x=>x?(Array.isArray(x.log)?x.log.length:0)+Object.keys(x.hist||{}).length+(Array.isArray(x.bw)?x.bw.length:0):0;
+    if(d&&((d.ts||0)>(S.ts||0)||(rich(d)>0&&rich(S)===0))){S=Object.assign(DEFAULTS(),JSON.parse(JSON.stringify(d)));normS();writeLocal();rerender();setSync('cloud');}
     else if(S.ts&&(!d||S.ts>(d.ts||0)))flushRemote();
     else setSync('cloud');
   }catch(e){setSync(fallback);}
@@ -1994,16 +1996,42 @@ function toast(t){const el=$('toast');el.textContent=t;el.hidden=true;void el.of
 function b64e(str){const by=new TextEncoder().encode(str);let bin='';for(let i=0;i<by.length;i++)bin+=String.fromCharCode(by[i]);return btoa(bin);}
 function b64d(b){const bin=atob(b),by=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)by[i]=bin.charCodeAt(i);return new TextDecoder().decode(by);}
 const exportCode=()=>'PROGRAMME1:'+b64e(JSON.stringify({v:1,done:S.done,kg:S.kg,dt:S.dt,log:S.log,hist:S.hist,food:S.food,phase:S.phase,bw:S.bw,prof:S.prof}));
+/* reads a backup code even when the paste carries extra text, line breaks, invisible characters or a second copy */
+function readBackup(txt){
+  const t=String(txt||'').replace(/[^A-Za-z0-9+\/=:_-]/g,''),i=t.indexOf('PROGRAMME1:');
+  if(i<0)throw {why:t.length?'prefix':'empty'};
+  let b=t.slice(i+11);const j=b.indexOf('PROGRAMME1:');if(j>=0)b=b.slice(0,j);
+  b=b.replace(/[=:]/g,'').replace(/-/g,'+').replace(/_/g,'/');
+  const len=b.length;
+  if(b.length%4===1)b=b.slice(0,-1);
+  b+='='.repeat((4-b.length%4)%4);
+  let str;try{str=b64d(b);}catch(e){throw {why:'chars',len};}
+  if(str[0]!=='{')throw {why:'chars',len};
+  let d=0,q=false,es=false,end=-1;
+  for(let k=0;k<str.length;k++){const c=str[k];
+    if(q){if(es)es=false;else if(c==='\\')es=true;else if(c==='"')q=false;}
+    else if(c==='"')q=true;else if(c==='{')d++;else if(c==='}'){d--;if(d===0){end=k;break;}}}
+  if(end<0)throw {why:'cut',len};
+  try{return JSON.parse(str.slice(0,end+1));}catch(e){throw {why:'chars',len};}
+}
 function importCode(txt){
-  const m=String(txt).replace(/\s+/g,'').match(/^PROGRAMME1:([A-Za-z0-9+/=]+)$/);
-  if(!m)throw new Error('format');
-  const o=JSON.parse(b64d(m[1]));
-  if(!o||typeof o!=='object'||!o.kg||typeof o.kg!=='object')throw new Error('format');
-  S=Object.assign(DEFAULTS(),S,{done:o.done&&typeof o.done==='object'?o.done:{},kg:o.kg,dt:o.dt&&typeof o.dt==='object'?o.dt:{},log:Array.isArray(o.log)?o.log.filter(x=>x&&typeof x.d==='string'&&typeof x.t==='string'):[],hist:o.hist&&typeof o.hist==='object'?o.hist:{},food:o.food&&typeof o.food==='object'?o.food:{},phase:PH[o.phase]?o.phase:S.phase,bw:Array.isArray(o.bw)?o.bw:S.bw,prof:o.prof&&typeof o.prof==='object'?o.prof:S.prof});
-  normS();save();rerender();
+  const o=readBackup(txt);
+  if(!o||typeof o!=='object'||!o.kg||typeof o.kg!=='object')throw {why:'chars'};
+  S=Object.assign(DEFAULTS(),S,{done:o.done&&typeof o.done==='object'?o.done:{},kg:o.kg,dt:o.dt&&typeof o.dt==='object'?o.dt:{},log:Array.isArray(o.log)?o.log.filter(x=>x&&typeof x.d==='string'&&typeof x.t==='string'):[],hist:o.hist&&typeof o.hist==='object'?o.hist:{},food:o.food&&typeof o.food==='object'&&Object.keys(o.food).length?o.food:S.food,phase:PH[o.phase]?o.phase:S.phase,bw:Array.isArray(o.bw)&&o.bw.length?o.bw:S.bw,prof:o.prof&&typeof o.prof==='object'?o.prof:S.prof});
+  normS();save();
+  try{rerender();}catch(e){}
+  return S.log.length;
+}
+function importMsg(e){const w=e&&e.why;
+  return w==='empty'?'Colle d\'abord ton code de sauvegarde dans la zone.':w==='prefix'?'Je ne trouve pas « PROGRAMME1: » dans ce que tu as collé. Copie le code en entier, depuis PROGRAMME1 jusqu\'au dernier caractère.'
+    :w==='cut'?`Le code est incomplet : la fin a été coupée à la copie (${fmtInt(e.len||0)} caractères reçus). Recopie-le en entier.`:'Ce code de sauvegarde n\'est pas lisible. Recopie-le en entier, sans rien ajouter.';}
+function runImport(txt){
+  const er=$('importErr');
+  try{const k=importCode(txt);$('importArea').value='';$('importBox').hidden=true;er.hidden=true;toast(`Données restaurées · ${k} séance${k>1?'s':''}`);}
+  catch(e){er.textContent=importMsg(e);er.hidden=false;}
 }
 function applyTheme(){if(!IS_PWA)return;const r=document.documentElement;if(S.theme==='light'||S.theme==='dark')r.setAttribute('data-theme',S.theme);else r.removeAttribute('data-theme');}
-const APP_VERSION='12 nov. · 11';
+const APP_VERSION='12 nov. · 12';
 function renderSettings(){
   $('appVer').textContent='Version '+APP_VERSION+(IS_PWA?(isStandalone()?' · app installée':' · navigateur'):' · app Claude');
   const pr=S.prof;$('profSum').innerHTML=pr?`<b style="color:var(--ink)">${GOALS[pr.goal][1]} · ${LEVELS[pr.level].toLowerCase()} · ${pr.freq} séances par semaine</b><br>${fmt1(curWeight())} kg · ${pr.h} cm · ${pr.age} ans${pr.target?` · objectif ${fmt1(pr.target)} kg`:''}`:'Réponds à quelques questions (poids, taille, âge, objectif) pour adapter tes séances et tes apports.';
@@ -2020,8 +2048,9 @@ $('exportBtn').onclick=()=>{
   const pick=()=>{ta.focus();ta.select();toast('Sélectionne le code puis copie-le');};
   try{navigator.clipboard.writeText(code).then(()=>toast('Sauvegarde copiée'),pick);}catch(e){pick();}
 };
-$('importBtn').onclick=()=>{$('importBox').hidden=!$('importBox').hidden;if(!$('importBox').hidden)$('importArea').focus();};
-$('importGo').onclick=()=>{try{importCode($('importArea').value);$('importArea').value='';$('importBox').hidden=true;toast('Données restaurées');}catch(e){toast('Ce code de sauvegarde n\'est pas valide');}};
+$('importBtn').onclick=()=>{$('importBox').hidden=!$('importBox').hidden;$('importErr').hidden=true;};
+$('importGo').onclick=()=>runImport($('importArea').value);
+$('importPaste').onclick=()=>{try{navigator.clipboard.readText().then(t=>{$('importArea').value=t;runImport(t);},()=>{$('importArea').focus();toast('Colle le code dans la zone, puis touche Restaurer');});}catch(e){$('importArea').focus();toast('Colle le code dans la zone, puis touche Restaurer');}};
 $('resetAll').onclick=()=>{
   const b=$('resetAll');
   if(!resetAllArmed){resetAllArmed=1;b.textContent='Touche encore pour confirmer';setTimeout(()=>{resetAllArmed=0;b.textContent='Tout décocher';},3500);return;}
@@ -2795,7 +2824,7 @@ const remoteReady=initRemote().then(()=>true);
 Promise.all([splashDone,Promise.race([remoteReady,new Promise(r=>setTimeout(()=>r(false),5000))])]).then(([,ok])=>{if(ok&&!S.prof&&!S.profAsked&&!anySheetOpen()&&$('doneModal').hidden)openProf();});
 initSample();
 if(IS_PWA&&navigator.storage&&navigator.storage.persist){try{navigator.storage.persist();}catch(e){}}
-window.__fp={DAYS,drawEx,openEx,toggleSet,showDone,S:()=>S,openProf,openBw,parseBwText,fromAI,parseDateAny,rerender,phases,runBwFile};
+window.__fp={readBackup,DAYS,drawEx,openEx,toggleSet,showDone,S:()=>S,openProf,openBw,parseBwText,fromAI,parseDateAny,rerender,phases,runBwFile};
 
 </script>
 <script>if('serviceWorker' in navigator){var hadSW=!!navigator.serviceWorker.controller,swReload=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(hadSW&&!swReload){swReload=true;location.reload();}});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){document.addEventListener('visibilitychange',function(){if(!document.hidden)r.update().catch(function(){});});}).catch(function(){});});}</script>
