@@ -1,14 +1,14 @@
 {
-  "name": "Mon programme",
-  "short_name": "Programme",
-  "description": "Séances de musculation et nutrition",
+  "name": "NIYA",
+  "short_name": "NIYA",
+  "description": "Coach sport et nutrition",
   "lang": "fr",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#F4F2F7",
-  "theme_color": "#4C2273",
+  "background_color": "#0A7455",
+  "theme_color": "#F6F1E7",
   "icons": [
     {
       "src": "icon-192.png",

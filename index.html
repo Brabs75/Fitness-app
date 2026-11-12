@@ -8,7 +8,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="NIYA">
-<meta name="theme-color" content="#F2F2F7">
+<meta name="theme-color" content="#F6F1E7">
 <meta name="format-detection" content="telephone=no">
 <meta name="robots" content="noindex, nofollow">
 <link rel="manifest" href="manifest.webmanifest">
@@ -19,17 +19,18 @@
 <style>
 /* Layout: phone-first app shell. A plum hero header opens each tab, content sits in a 560px column, a fixed call-to-action and tab bar sit at the bottom, exercise detail and settings open as bottom sheets. */
 :root{
-  --bg:#F2F2F7;--surface:#FFFFFF;--surface-2:#F2F2F7;--line:#E5E5EA;--fill:rgba(118,118,128,.12);--chev:#C7C7CC;--tab-off:#8E8E93;
-  --ink:#000000;--muted:#6E6E73;--dim:#AEAEB2;
-  --accent:#007AFF;--accent-ink:#FFFFFF;--accent-soft:#E9F3FF;
-  --hero:#F2F2F7;--hero-2:#F2F2F7;--hero-ink:#000000;--hero-muted:#6E6E73;--hero-line:#D1D1D6;--hero-fill:rgba(118,118,128,.12);
-  --ok:#34C759;--ok-ink:#1E7B34;--ok-soft:#E6F8EA;--warn:#A85100;--warn-soft:#FFF3E0;--hot:#FF3B30;
-  --c-prot:#5856D6;--c-carb:#FF9500;--c-fat:#30B0C7;
-  --stage:#F2F2F7;--stage-hi:#F2F2F7;--shadow:rgba(0,0,0,.10);--hl:rgba(255,255,255,.62);
-  --card-sh:0 1px 2px rgba(0,0,0,.04);--tab-bg:rgba(249,249,249,.86);--pill:#1C1C1E;--rest-a:#FFFFFF;--rest-b:#FFFFFF;
-  --fig-body:#D3D7DF;--fig-line:#6F7686;--fig-far:#B4BAC6;--fig-far-line:#858C9B;--fig-ms:#E7EAEF;--fig-ms-line:#9299A8;--fig-mu:#FF3B30;--fig-mu-line:#C11F16;--fig-hair:#4A4E59;
-  --m-metal:#E3E5EA;--m-metal-line:#9FA5B1;--m-dark:#5A5F6B;--m-dark-line:#3A3E47;--m-pad:#3B3F49;--m-pad-line:#24272E;
-  --m-plate:#33373F;--m-plate-line:#1E2126;--m-plate-far:#C9CDD5;--m-cable:#8A909B;--ground:#D1D1D6;
+  --bg:#F6F1E7;--surface:#FFFFFF;--surface-2:#F6F1E7;--line:#EAE3D5;--fill:rgba(126,108,78,.13);--chev:#CFC6B4;--tab-off:#968D7D;
+  --ink:#1B1915;--muted:#6F675A;--dim:#B0A796;
+  --accent:#0A7D57;--accent-ink:#FFFFFF;--accent-soft:#E2F1EA;--accent-rgb:10,125,87;
+  --gold:#C4952B;--gold-ink:#8A6410;--gold-soft:#F9F0D9;
+  --hero:#F6F1E7;--hero-2:#F6F1E7;--hero-ink:#1B1915;--hero-muted:#6F675A;--hero-line:#D9D0BE;--hero-fill:rgba(126,108,78,.13);
+  --ok:#0A7D57;--ok-ink:#0A6848;--ok-soft:#E2F1EA;--warn:#8F5600;--warn-soft:#FBF0D9;--hot:#C1272D;
+  --c-prot:#3F55B0;--c-carb:#E0A21B;--c-fat:#C4603C;
+  --stage:#F6F1E7;--stage-hi:#F6F1E7;--shadow:rgba(60,45,20,.13);--hl:rgba(255,255,255,.62);
+  --card-sh:0 1px 2px rgba(60,45,20,.05);--tab-bg:rgba(251,248,241,.88);--pill:#1F1C18;--rest-a:#FFFFFF;--rest-b:#FFFFFF;
+  --fig-body:#DAD4C8;--fig-line:#766E60;--fig-far:#BDB6A8;--fig-far-line:#8C8474;--fig-ms:#EEE9DF;--fig-ms-line:#9B9383;--fig-mu:#C1272D;--fig-mu-line:#8A1A1F;--fig-hair:#463F35;
+  --m-metal:#E7E2D7;--m-metal-line:#A49C8B;--m-dark:#5F594E;--m-dark-line:#3D382F;--m-pad:#3B372F;--m-pad-line:#25221C;
+  --m-plate:#34302A;--m-plate-line:#1F1C18;--m-plate-far:#CEC7B9;--m-cable:#8E8676;--ground:#D6CDBB;
   --f-body:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
   --f-display:ui-rounded,'SF Pro Rounded',-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue','Segoe UI',Roboto,Arial,sans-serif;
   color-scheme:light;
@@ -582,7 +583,7 @@ body::before{background:#000}
 .t-n{font-size:17px;font-weight:600;letter-spacing:-.02em}
 .t-m{font-size:13px;font-weight:400}
 .t-bar{height:4px;background:var(--line)}
-.tile.on{background:var(--surface);color:var(--ink);box-shadow:0 0 0 2.5px var(--accent),0 8px 22px rgba(0,122,255,.16)}
+.tile.on{background:var(--surface);color:var(--ink);box-shadow:0 0 0 2.5px var(--accent),0 8px 22px rgba(var(--accent-rgb),.16)}
 .tile.on .t-k{color:var(--accent);opacity:1}
 .tile.on .t-m{color:var(--muted);opacity:1}
 .tile.on .t-bar{background:var(--line)}
@@ -657,8 +658,8 @@ body::before{background:#000}
 .empty-state p{font-size:15px}
 
 /* bottom bar + main button */
-.cta button{height:54px;border-radius:16px;font-size:17px;font-weight:600;letter-spacing:-.01em;box-shadow:0 8px 22px rgba(0,122,255,.3)}
-.cta button.done{box-shadow:0 8px 22px rgba(52,199,89,.3)}
+.cta button{height:54px;border-radius:16px;font-size:17px;font-weight:600;letter-spacing:-.01em;box-shadow:0 8px 22px rgba(var(--accent-rgb),.3)}
+.cta button.done{background:var(--gold);color:#1B1915;box-shadow:0 8px 22px rgba(196,149,43,.35)}
 .tabbar{border-top:.5px solid rgba(60,60,67,.29);padding-block:5px calc(3px + env(safe-area-inset-bottom,0px))}
 .tab{font-size:10.5px;font-weight:500;letter-spacing:0;color:var(--tab-off);gap:1px}
 .tab svg{width:27px;height:27px}
@@ -708,7 +709,7 @@ body::before{background:#000}
 .sh-nav button.primary{background:var(--accent);color:#fff}
 
 /* rest: light material, blue ring */
-.rest{background:rgba(255,255,255,.94);-webkit-backdrop-filter:blur(24px) saturate(1.6);backdrop-filter:blur(24px) saturate(1.6);color:var(--ink)}
+.rest{background:rgba(251,248,241,.95);-webkit-backdrop-filter:blur(24px) saturate(1.6);backdrop-filter:blur(24px) saturate(1.6);color:var(--ink)}
 .rest-k{color:var(--muted);font-size:13px;font-weight:600}
 .rest-label{font-size:30px;font-weight:700}
 .rest-label svg{width:28px;height:28px;color:var(--accent)}
@@ -797,20 +798,29 @@ body::before{background:#000}
   .ex-name,.t-n{font-size:16px}
 }
 
-/* brand screen */
-.splash{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .45s ease,visibility .45s}
+/* brand screen: emerald, gold zellige */
+.splash{position:fixed;inset:0;z-index:200;background:radial-gradient(120% 90% at 50% 38%,#12976D 0%,#0A7455 45%,#064A37 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .45s ease,visibility .45s}
+.splash::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23E9C46A' stroke-width='1.2'%3E%3Cpath d='M19 19H53V53H19Z'/%3E%3Cpath d='M36 12L60 36L36 60L12 36Z'/%3E%3Cpath d='M36 0V12M36 60V72M0 36H12M60 36H72M0 0L19 19M72 0L53 19M72 72L53 53M0 72L19 53'/%3E%3C/g%3E%3C/svg%3E") center/72px;opacity:.2;-webkit-mask-image:radial-gradient(circle at 50% 44%,transparent 0 30%,#000 85%);mask-image:radial-gradient(circle at 50% 44%,transparent 0 30%,#000 85%)}
 .splash.out{opacity:0;visibility:hidden;pointer-events:none}
 .splash[hidden]{display:none}
-.sp-in{display:flex;flex-direction:column;align-items:center;animation:spIn .8s cubic-bezier(.2,.8,.2,1) both}
-.sp-logo{width:124px;height:124px;filter:drop-shadow(0 10px 24px rgba(0,122,255,.18))}
-.sp-ar{margin-top:20px;font:500 24px/1.2 'Geeza Pro','Noto Naskh Arabic','Noto Sans Arabic',serif;color:var(--muted)}
-.sp-name{margin-top:2px;font:800 56px/1.05 var(--f-body);letter-spacing:.16em;margin-right:-.16em;color:var(--ink)}
-.sp-name i,.bm i{font-style:normal;background:linear-gradient(135deg,#0E9F6E,#007AFF);-webkit-background-clip:text;background-clip:text;color:transparent}
-.sp-tag{margin-top:12px;font-size:16px;color:var(--muted)}
-.sp-foot{position:absolute;left:0;right:0;bottom:calc(30px + env(safe-area-inset-bottom,0px));text-align:center;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.sp-in{position:relative;display:flex;flex-direction:column;align-items:center;animation:spIn .8s cubic-bezier(.2,.8,.2,1) both}
+.sp-logo{width:132px;height:132px;filter:drop-shadow(0 10px 26px rgba(0,0,0,.28))}
+.sp-ar{margin-top:20px;font:500 26px/1.2 'Geeza Pro','Noto Naskh Arabic','Noto Sans Arabic',serif;color:#EBCB7A}
+.sp-name{margin-top:2px;font:800 56px/1.05 var(--f-body);letter-spacing:.16em;margin-right:-.16em;color:#FFF9EC}
+.sp-name i{font-style:normal;color:#EBC25E}
+.bm i{font-style:normal;color:var(--accent)}
+.sp-tag{margin-top:12px;font-size:16px;color:rgba(255,249,236,.82)}
+.sp-foot{position:absolute;left:0;right:0;bottom:calc(30px + env(safe-area-inset-bottom,0px));text-align:center;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,249,236,.6)}
 @keyframes spIn{from{opacity:0;transform:translateY(12px) scale(.95)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.sp-in{animation:none}.splash{transition:none}}
 .bm{font-weight:800;letter-spacing:.12em;color:var(--ink);margin-right:9px}
+
+/* gold touches */
+.t-k,.sess-h .k,.tile.on .t-k{color:var(--gold-ink)}
+.wd.today .wd-c{border-color:var(--gold);color:var(--gold-ink)}
+.medal{background:var(--gold-soft);color:var(--gold-ink)}
+.jring .pr.over{stroke:var(--c-carb)}
+.frow .seg3{background:rgba(126,108,78,.18)}
 
 /* program questions */
 .pf-lead{padding-top:4px;font-size:15.5px;line-height:1.45;color:var(--muted)}
@@ -873,13 +883,13 @@ body::before{background:#000}
 <div class="splash" id="splash">
   <div class="sp-in">
     <svg class="sp-logo" viewBox="0 0 120 120" aria-hidden="true">
-      <defs><linearGradient id="spG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0E9F6E"/><stop offset="1" stop-color="#007AFF"/></linearGradient></defs>
+      <defs><linearGradient id="spG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6DC8C"/><stop offset="1" stop-color="#C9982F"/></linearGradient></defs>
       <g fill="none" stroke="url(#spG)" stroke-linejoin="round" stroke-linecap="round">
         <path d="M24 24H96V96H24Z" stroke-width="4.5"/><path d="M60 9.1L110.9 60L60 110.9L9.1 60Z" stroke-width="4.5"/>
-        <path d="M60 60L24 24M60 60L96 24M60 60L96 96M60 60L24 96M60 60V9.1M60 60H110.9M60 60V110.9M60 60H9.1" stroke-width="1.6" opacity=".45"/>
+        <path d="M60 60L24 24M60 60L96 24M60 60L96 96M60 60L24 96M60 60V9.1M60 60H110.9M60 60V110.9M60 60H9.1" stroke-width="1.6" opacity=".55"/>
       </g>
-      <g fill="#fff" stroke="url(#spG)" stroke-width="2.6"><circle cx="24" cy="24" r="4.6"/><circle cx="96" cy="24" r="4.6"/><circle cx="96" cy="96" r="4.6"/><circle cx="24" cy="96" r="4.6"/><circle cx="60" cy="9.1" r="4.6"/><circle cx="110.9" cy="60" r="4.6"/><circle cx="60" cy="110.9" r="4.6"/><circle cx="9.1" cy="60" r="4.6"/></g>
-      <circle cx="60" cy="60" r="10" fill="url(#spG)"/>
+      <g fill="#FFF9EC" stroke="url(#spG)" stroke-width="2.4"><circle cx="24" cy="24" r="4.6"/><circle cx="96" cy="24" r="4.6"/><circle cx="96" cy="96" r="4.6"/><circle cx="24" cy="96" r="4.6"/><circle cx="60" cy="9.1" r="4.6"/><circle cx="110.9" cy="60" r="4.6"/><circle cx="60" cy="110.9" r="4.6"/><circle cx="9.1" cy="60" r="4.6"/></g>
+      <circle cx="60" cy="60" r="10" fill="#C1272D" stroke="url(#spG)" stroke-width="2.6"/>
     </svg>
     <div class="sp-ar" lang="ar" dir="rtl">نية</div>
     <div class="sp-name" aria-label="NIYA">N<i>I</i>Y<i>A</i></div>
@@ -1993,7 +2003,7 @@ function importCode(txt){
   normS();save();rerender();
 }
 function applyTheme(){if(!IS_PWA)return;const r=document.documentElement;if(S.theme==='light'||S.theme==='dark')r.setAttribute('data-theme',S.theme);else r.removeAttribute('data-theme');}
-const APP_VERSION='12 nov. · 10';
+const APP_VERSION='12 nov. · 11';
 function renderSettings(){
   $('appVer').textContent='Version '+APP_VERSION+(IS_PWA?(isStandalone()?' · app installée':' · navigateur'):' · app Claude');
   const pr=S.prof;$('profSum').innerHTML=pr?`<b style="color:var(--ink)">${GOALS[pr.goal][1]} · ${LEVELS[pr.level].toLowerCase()} · ${pr.freq} séances par semaine</b><br>${fmt1(curWeight())} kg · ${pr.h} cm · ${pr.age} ans${pr.target?` · objectif ${fmt1(pr.target)} kg`:''}`:'Réponds à quelques questions (poids, taille, âge, objectif) pour adapter tes séances et tes apports.';
