@@ -877,6 +877,25 @@ body::before{background:#000}
 
 .fld .fl-mac input{height:auto;border-radius:0;background:none;padding:0;font:700 19px var(--f-display)}
 
+/* body composition */
+.bw-src{margin:0 0 6px}
+.bw-note{margin:0 4px 10px}
+.bw-comp button{display:block;width:100%;text-align:left;background:var(--surface);border-radius:16px;padding:12px 14px;box-shadow:var(--card-sh);min-width:0;transition:box-shadow .15s,background .15s}
+.bw-comp button.on{background:var(--accent-soft);box-shadow:inset 0 0 0 2px var(--accent)}
+.bw-comp{margin-top:10px}
+.bw-seg{background:var(--surface);border-radius:20px;box-shadow:var(--card-sh);padding:4px 14px}
+.bw-seg>div{display:grid;grid-template-columns:minmax(0,1fr) 84px 84px;gap:8px;align-items:center;min-height:48px;font-size:15.5px}
+.bw-seg>div+div{border-top:1px solid var(--line)}
+.bw-seg .h{min-height:34px;font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.02em}
+.bw-seg .h span,.bw-seg>div>span:not(:first-child){text-align:center}
+.bw-seg button{height:36px;border-radius:10px;background:var(--fill);font:700 16px var(--f-display);font-variant-numeric:tabular-nums}
+.bw-seg button.on{background:var(--accent);color:#fff}
+.bw-raw{margin-top:10px;background:var(--surface);border-radius:20px;box-shadow:var(--card-sh);border-top:0;overflow:hidden}
+.bw-raw .row{width:100%;text-align:left;padding-inline:14px;font-size:15px}
+.bw-raw .row b{font:700 16px var(--f-display)}
+.bw-raw .row.on{background:var(--accent-soft)}
+#bwBody .bw-found .row{padding-inline:14px}
+
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
 </head>
 <body>
@@ -1615,7 +1634,7 @@ function weekKeys(){const d=new Date(),dow=(d.getDay()+6)%7;return Array.from({l
 
 /* ================= STATE ================= */
 const KEY='fitplan-v2';
-const DEFAULTS=()=>({done:{},kg:{},dt:{},log:[],hist:{},food:{},nview:'plan',day:'j1',tab:'muscu',phase:'debut',theme:'auto',hideInstall:false,bw:[],prof:null,profAsked:false,pview:'charges',ts:0});
+const DEFAULTS=()=>({done:{},kg:{},dt:{},log:[],hist:{},food:{},nview:'plan',day:'j1',tab:'muscu',phase:'debut',theme:'auto',hideInstall:false,bw:[],prof:null,profAsked:false,pview:'charges',bsrc:'',bmet:'fat',ts:0});
 let S=DEFAULTS();
 try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(DEFAULTS(),JSON.parse(r));}catch(e){}
 normS();
@@ -1684,13 +1703,13 @@ function renderHero(){
   $('heroDate').textContent=fmtLong(now);
   $('heroTitle').textContent=h>=18||h<5?'Bonsoir':'Bonjour';
   const wk=weekKeys(),t=today(),inWeek=S.log.filter(x=>wk.includes(x.t));
-  const days=new Set(inWeek.map(x=>x.t)),main=new Set(inWeek.filter(x=>x.d!=='j4').map(x=>x.d)),bonus=inWeek.some(x=>x.d==='j4');
+  const days=new Set(inWeek.map(x=>x.t)),bd=DAYS.find(d=>d.bonus),bid=bd?bd.id:'',main=new Set(inWeek.filter(x=>x.d!==bid).map(x=>x.d)),bonus=!!bid&&inWeek.some(x=>x.d===bid);
   $('week').innerHTML=wk.map((k,i)=>{const c=['wd'];if(days.has(k))c.push('done');if(k===t)c.push('today');
     return `<div class="${c.join(' ')}"><span class="wd-l">${'LMMJVSD'[i]}</span><span class="wd-c">${days.has(k)?I.check:fromKey(k).getDate()}</span></div>`;}).join('');
-  const goal=(S.prof&&S.prof.freq)||3,nb=goal>=4?main.size+(bonus?1:0):main.size,plus=bonus&&goal<4?' + bonus':'';
+  const goal=(S.prof&&S.prof.freq)||3,nb=main.size,plus=bonus?' + bonus':'';
   $('weekCap').innerHTML=nb>=goal?`<b>Semaine complète</b> · ${goal} séances sur ${goal}${plus}`:`<b>${nb} séance${nb>1?'s':''} sur ${goal}</b> cette semaine${plus}`;
-  $('sessCap').textContent=goal>=4?'4 par semaine, bonus compris':goal===2?'2 par semaine, au choix':'3 par semaine + 1 bonus';
-  const next=DAYS.slice(0,3).find(d=>!main.has(d.id))||(goal>=4&&!bonus?DAYS[3]:null);
+  $('sessCap').textContent=goal>=4?'4 par semaine':goal+' par semaine + 1 bonus';
+  const next=DAYS.filter(d=>!d.bonus).find(d=>!main.has(d.id));
   $('heroSub').innerHTML=nb<goal&&next?`Prochaine séance : <b>${next.title}</b>`:goal>=4?'Ton programme de la semaine est fait. Bravo.':'Ton programme de la semaine est fait. Le bonus est là si tu es motivé.';
 }
 function renderTiles(){
@@ -1699,7 +1718,7 @@ function renderTiles(){
       <span class="t-k">${d.tab}</span><span class="t-n">${d.title}</span>
       <span class="t-m">${d.ex.length} exercices · ${d.mins} min</span>
       <span class="t-bar"><i style="width:${tot?dn/tot*100:0}%"></i></span>
-      <svg class="t-ill st" viewBox="0 0 320 210" aria-hidden="true">${drawEx(ALL[d.ill].ex,ALL[d.ill].ex.anim.loop?.15:.55)}</svg>
+      <svg class="t-ill st" viewBox="0 0 320 210" aria-hidden="true">${drawEx(POOL[d.ill],POOL[d.ill].anim.loop?.15:.55)}</svg>
       ${dn===tot&&tot?`<span class="t-ok">${I.check}</span>`:''}</button>`;}).join('');
 }
 function metaTxt(e){const s0=e.sets[0];
@@ -1716,7 +1735,7 @@ function renderSess(){
   const stale=S.dt[d.id]&&S.dt[d.id]!==today()&&dn>0;
   $('sess').innerHTML=`<div class="sess-h"><div><div class="k">${d.tab} · ${d.short}</div><h2>${d.title}</h2><p>${d.sub}</p></div>
     <div class="ring-s"><svg viewBox="0 0 62 62" aria-hidden="true"><circle class="tr" cx="31" cy="31" r="${R}"/><circle class="pr" cx="31" cy="31" r="${R}" style="stroke-dasharray:${n(CC)};stroke-dashoffset:${n(CC*(1-(tot?dn/tot:0)))}"/></svg><b>${dn}/${tot}</b></div></div>
-    ${stale?`<div class="stale"><p>Séries cochées le <b>${esc(fmtShort(fromKey(S.dt[d.id])))}</b>. Tu repars à zéro ? Tes charges sont gardées.</p><button type="button" id="newSess">Nouvelle séance</button></div>`:''}
+    ${stale?`<div class="stale"><p>Séries cochées le <b>${esc(fmtShort(fromKey(S.dt[d.id])).replace(/\.$/,''))}</b>. Tu repars à zéro ? Tes charges sont gardées.</p><button type="button" id="newSess">Nouvelle séance</button></div>`:''}
     <ul class="ex-list">${d.ex.map(exRow).join('')}</ul>
     ${dn?`<button type="button" class="reset${resetArmed?' arm':''}" id="resetBtn">${resetArmed?'Touche encore pour confirmer':'Décocher les séries de cette séance'}</button>`:''}`;
 }
@@ -1762,10 +1781,10 @@ const dShort=t=>fromKey(t).toLocaleDateString('fr-FR',{day:'numeric',month:'shor
 const UP=ic('<path d="M12 19V5M6 11l6-6 6 6"/>',2.6),DOWNA=ic('<path d="M12 5v14M6 13l6 6 6-6"/>',2.6);
 function niceStep(x){const p=Math.pow(10,Math.floor(Math.log10(x)));for(const m of [1,2,2.5,5,10]){if(m*p>=x-1e-9)return m*p;}return 10*p;}
 const CW=320,CH=132;
-function chartSvg(arr,key,label){
-  const l=38,r=16,tp=18,bt=24,vals=arr.map(x=>x.max);
-  const mn=Math.min(...vals),mx=Math.max(...vals),step=niceStep(Math.max((mx-mn)/3,1));
-  let lo=Math.floor(mn/step)*step,hi=Math.ceil(mx/step)*step;if(hi===lo){hi=lo+step;lo=Math.max(0,lo-step);}
+function chartSvg(arr,key,label,o){
+  const unit=o&&o.unit!=null?o.unit:'kg',l=38,r=16,tp=18,bt=24,vals=arr.map(x=>x.max);
+  const mn=Math.min(...vals),mx=Math.max(...vals),step=niceStep(Math.max((mx-mn)/3,(o&&o.min)||1));
+  let lo=Math.floor(mn/step+1e-9)*step,hi=Math.ceil(mx/step-1e-9)*step;if(hi-lo<step/2){hi=lo+step;lo=lo>=0?Math.max(0,lo-step):lo-step;}
   const X=i=>arr.length===1?(l+CW-r)/2:l+(CW-l-r)*i/(arr.length-1);
   const Y=v=>tp+(CH-tp-bt)*(1-(v-lo)/(hi-lo));
   let g='';for(let v=lo;v<=hi+1e-9;v+=step){const y=n(Y(v));g+=`<line x1="${l}" x2="${CW-r}" y1="${y}" y2="${y}" class="ch-grid"/><text x="${l-7}" y="${n(Y(v)+3.5)}" class="ch-ax" text-anchor="end">${fmtKg(v)}</text>`;}
@@ -1774,7 +1793,7 @@ function chartSvg(arr,key,label){
   const area=arr.length>1?`<path d="${path} L${pts[last][0]} ${CH-bt} L${pts[0][0]} ${CH-bt} Z" class="ch-area"/><path d="${path}" class="ch-line"/>`:'';
   const dots=pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="${i===last?5:arr.length>24?2.4:4}" class="ch-dot${i===last?' last':''}"/>`).join('');
   const xl=arr.length>1?`<text x="${pts[0][0]}" y="${CH-6}" class="ch-ax" text-anchor="start">${dShort(arr[0].t)}</text><text x="${pts[last][0]}" y="${CH-6}" class="ch-ax" text-anchor="end">${dShort(arr[last].t)}</text>`:`<text x="${pts[0][0]}" y="${CH-6}" class="ch-ax" text-anchor="middle">${dShort(arr[0].t)}</text>`;
-  return `<svg class="ch" viewBox="0 0 ${CW} ${CH}" data-key="${esc(key)}" data-pts='${JSON.stringify(pts)}' role="img" aria-label="${esc(label)} : ${key==='@bw'?'':'charge maximale par séance, '}de ${fmtKg(arr[0].max)} à ${fmtKg(arr[last].max)} kg">${g}${area}${dots}${xl}</svg>`;
+  return `<svg class="ch" viewBox="0 0 ${CW} ${CH}" data-key="${esc(key)}" data-unit="${esc(unit)}" data-pts='${JSON.stringify(pts)}' role="img" aria-label="${esc(label)} : ${key.charAt(0)==='@'?'':'charge maximale par séance, '}de ${fmtKg(arr[0].max)} à ${fmtKg(arr[last].max)} ${esc(unit)}">${g}${area}${dots}${xl}</svg>`;
 }
 function progCard(e,j){
   const key=kgKey(e,j),arr=S.hist[key]||[],name=j==null?e.name:`${e.parts[j]} · superset`;
@@ -1801,14 +1820,15 @@ function renderProg(){
   const has=Object.keys(S.hist).length>0;
   if(!has){$('progList').innerHTML=`<div class="empty-state">${ic('<path d="M4 19h16M6 15l4-4 3 3 5-6"/><path d="M15 8h3v3"/>',2.2)}<b>Ta progression s'affichera ici</b><p>Note ta charge et valide tes séries : après chaque séance, la charge la plus lourde de chaque exercice s'ajoute à sa courbe.</p></div>`;return;}
   $('progList').innerHTML=DAYS.map(d=>{const items=[];d.ex.forEach(e=>{if(e.kg!==false)partIdx(e).forEach(j=>items.push(progCard(e,j)));});
-    return items.length?`<div class="sec-h"><h2>${d.title}</h2><span>${d.tab}</span></div>${items.join('')}`:'';}).join('');
+    return items.length?`<div class="sec-h"><h2>${d.title}</h2><span>${d.tab}</span></div>${items.join('')}`:'';}).join('')+(()=>{const o=[];Object.values(POOL).forEach(e=>{if(!ALL[e.id]&&e.kg!==false)partIdx(e).forEach(j=>{if((S.hist[kgKey(e,j)]||[]).length)o.push(progCard(e,j));});});
+    return o.length?`<div class="sec-h"><h2>Autres exercices</h2><span>hors programme actuel</span></div>${o.join('')}`:'';})();
 }
 function chartHover(svg,clientX){
-  const pts=JSON.parse(svg.dataset.pts),bw=svg.dataset.key==='@bw',arr=bw?bwSeries():S.hist[svg.dataset.key]||[],rc=svg.getBoundingClientRect(),x=(clientX-rc.left)/rc.width*CW;
+  const pts=JSON.parse(svg.dataset.pts),K=svg.dataset.key,bw=K.charAt(0)==='@',arr=K==='@bw'?bwSeries():bw?metSeries(K.slice(3)):S.hist[K]||[],un=svg.dataset.unit,rc=svg.getBoundingClientRect(),x=(clientX-rc.left)/rc.width*CW;
   let bi=0,bd=1e9;pts.forEach((p,i)=>{const d=Math.abs(p[0]-x);if(d<bd){bd=d;bi=i;}});
   const it=arr[bi];if(!it)return;
   const tip=svg.parentNode.querySelector('.ch-tip'),px=pts[bi][0]/CW*100;
-  tip.innerHTML=bw?`<b>${fmt1(it.max)} kg</b> · ${dShort(it.t)}`:`<b>${fmtKg(it.max)} kg</b> · ${dShort(it.t)} · ${it.n} série${it.n>1?'s':''}`;
+  tip.innerHTML=bw?`<b>${fmtM(it.max)}${un?' '+un:''}</b> · ${dShort(it.t)}`:`<b>${fmtKg(it.max)} kg</b> · ${dShort(it.t)} · ${it.n} série${it.n>1?'s':''}`;
   tip.className='ch-tip'+(px<20?' l':px>80?' r':'');
   tip.style.left=px+'%';tip.style.top=(pts[bi][1]/CH*100)+'%';tip.hidden=false;
   let hv=svg.querySelector('.ch-hover');
@@ -2031,7 +2051,7 @@ function runImport(txt){
   catch(e){er.textContent=importMsg(e);er.hidden=false;}
 }
 function applyTheme(){if(!IS_PWA)return;const r=document.documentElement;if(S.theme==='light'||S.theme==='dark')r.setAttribute('data-theme',S.theme);else r.removeAttribute('data-theme');}
-const APP_VERSION='12 nov. · 12';
+const APP_VERSION='13 nov. · 14';
 function renderSettings(){
   $('appVer').textContent='Version '+APP_VERSION+(IS_PWA?(isStandalone()?' · app installée':' · navigateur'):' · app Claude');
   const pr=S.prof;$('profSum').innerHTML=pr?`<b style="color:var(--ink)">${GOALS[pr.goal][1]} · ${LEVELS[pr.level].toLowerCase()} · ${pr.freq} séances par semaine</b><br>${fmt1(curWeight())} kg · ${pr.h} cm · ${pr.age} ans${pr.target?` · objectif ${fmt1(pr.target)} kg`:''}`:'Réponds à quelques questions (poids, taille, âge, objectif) pour adapter tes séances et tes apports.';
@@ -2490,7 +2510,7 @@ $('apiDel').onclick=()=>{try{localStorage.removeItem(KEY_API);}catch(e){}renderS
 /* ================= PROFILE + PROGRAM SETTINGS ================= */
 const GOALS={perte:['Perdre du poids','Perte de poids'],muscle:['Prendre du muscle','Prise de muscle'],forme:['Me remettre en forme','Remise en forme']};
 const LEVELS={deb:'Débutant',inter:'Intermédiaire',conf:'Confirmé'};
-function byDate(a,b){return a.d<b.d?-1:a.d>b.d?1:0;}
+function byDate(a,b){return a.d<b.d?-1:a.d>b.d?1:(a.t||'')<(b.t||'')?-1:(a.t||'')>(b.t||'')?1:0;}
 function normS(){
   if(!Array.isArray(S.log))S.log=[];
   if(!S.hist||typeof S.hist!=='object')S.hist={};
@@ -2524,24 +2544,45 @@ function phases(){
 const curPlan=()=>{const P=phases();return P[S.phase]||P.debut;};
 /* sets, reps and rest follow the level and the goal; the exercises stay the same */
 const REPMAP={'20':'15','15':'12','12':'10','10':'8'};
+let POOL=null,BASEDAY=null;const FIN={};
+function finisher(dayId,min){
+  const f=FIN[dayId]||(FIN[dayId]=Object.assign({},POOL.ellip,{id:'fin-'+dayId,name:'Cardio de fin · elliptique',tip:'<b>En fin de séance :</b> rythme régulier, tu dois pouvoir parler. Le vélo ou le rameur léger conviennent aussi.'}));
+  f.sets=[{v:String(min),u:'min'}];return f;
+}
+/* the answers decide the sessions, the exercises kept in each, and the sets, reps and rest */
 function applyProfile(){
-  const p=S.prof;
-  DAYS.forEach(d=>{
-    if(!d._b)d._b={mins:d.mins,sub:d.sub};
-    let tb=0,tn=0;
-    d.ex.forEach(e=>{
-      if(!e._b)e._b={sets:e.sets,rest:e.rest};
-      let sets=e._b.sets,rest=e._b.rest;
-      if(p&&e.kg!==false&&!e.slides){
-        let k=sets.length;if(p.level==='deb')k=Math.min(k,3);else if(p.level==='conf')k=Math.max(k,4);
-        const v=p.goal==='muscle'?sets[0].v.replace(/\d+/g,m=>REPMAP[m]||m):sets[0].v,u=sets[0].u;
-        sets=Array.from({length:k},()=>({v,u}));
-        if(p.goal==='muscle'&&rest)rest+=15;
-      }
-      e.sets=sets;e.rest=rest;tb+=e._b.sets.length;tn+=sets.length;
-    });
-    d.mins=Math.round(d._b.mins*tn/tb/5)*5;d.sub=d._b.sub.replace(/\d+ min/,d.mins+' min');
+  if(!POOL){POOL={};BASEDAY={};DAYS.forEach(d=>{BASEDAY[d.id]=d;d._b={short:d.short,title:d.title,mins:d.mins,sub:d.sub,ill:d.ill,ex:d.ex.slice()};d.ex.forEach(e=>{POOL[e.id]=e;e._b={sets:e.sets,rest:e.rest};});});}
+  const p=S.prof,lv=p?p.level:'inter',fq=p?p.freq:3,goal=p?p.goal:null,easy=lv==='deb',hard=lv==='conf';
+  Object.values(POOL).forEach(e=>{
+    let sets=e._b.sets,rest=e._b.rest;
+    if(p&&e.kg!==false&&!e.slides){
+      let k=sets.length;if(easy||goal==='forme')k=Math.min(k,3);else if(hard)k=Math.max(k,4);
+      const v=goal==='muscle'?sets[0].v.replace(/\d+/g,m=>REPMAP[m]||m):sets[0].v,u=sets[0].u;
+      sets=Array.from({length:k},()=>({v,u}));
+      if(goal==='muscle'&&rest)rest+=15;
+    }
+    e.sets=sets;e.rest=rest;
   });
+  let plan;
+  if(!p)plan=['j1','j2','j3'].map(id=>[id,null,BASEDAY[id]._b.ex.map(e=>e.id)]);
+  else if(fq===2)plan=[
+    ['j1',{short:'Complet A',title:'Corps entier A',ill:'legpress',focus:'Jambes, dos et pectoraux'},['legpress','row','bench','legcurl',hard&&'rdl',!easy&&'calf','plank']],
+    ['j2',{short:'Complet B',title:'Corps entier B',ill:'pulldown',focus:'Jambes, dos et épaules'},['legext',hard&&'lunge','pulldown','ohp','abduct',!easy&&'arms','birddog']]];
+  else plan=[['j1',null,['legpress',!easy&&'lunge','legext','kickback','calf']],['j2',null,['row','bench','pulldown','ohp',!easy&&'arms']],['j3',null,['legcurl',!easy&&'rdl','abduct','plank','birddog']]];
+  const fin=!p||goal==='muscle'?0:goal==='perte'?12:8;
+  const out=plan.map(([id,meta,ids],n)=>{
+    const d=BASEDAY[id],b=d._b;
+    d.ex=ids.filter(Boolean).map(x=>POOL[x]);if(fin)d.ex.push(finisher(id,fin));
+    Object.assign(d,{tab:'Jour '+(n+1),short:b.short,title:b.title,ill:b.ill,bonus:false},meta||{});
+    if(!p){d.mins=b.mins;d.sub=b.sub;}
+    else{let sec=0;d.ex.forEach(e=>{sec+=e.kg===false&&!e.rest&&e.sets[0].u==='min'?e.sets.reduce((t,x)=>t+parseFloat(x.v)*60,0):e.sets.length*((e.rest||0)+(e.parts?70:45))+240;});
+      d.mins=Math.round(sec/300)*5;d.sub=`${(meta&&meta.focus)||b.sub.split(' · ')[0]} · environ ${d.mins} min`;}
+    return d;
+  });
+  const bn=BASEDAY.j4,bb=bn._b;
+  bn.ex=bb.ex.slice();Object.assign(bn,{tab:fq>=4?'Jour '+(out.length+1):'Bonus',short:bb.short,title:fq>=4?'Cardio et mobilité':bb.title,mins:bb.mins,sub:bb.sub,ill:bb.ill,bonus:fq<4});
+  DAYS.length=0;out.forEach(d=>DAYS.push(d));DAYS.push(bn);
+  Object.keys(ALL).forEach(k=>delete ALL[k]);DAYS.forEach(d=>d.ex.forEach((e,i)=>{ALL[e.id]={ex:e,day:d,i};}));
 }
 function renderProfCard(){
   const el=$('profCard');if(!el)return;
@@ -2560,7 +2601,7 @@ function renderProf(){
     const p=S.prof,e=energy(),pl=curPlan(),e0=DAYS[0].ex[0],tg=p.target,w=e.w;
     const row=(a,v)=>`<div class="row"><span>${a}</span><b>${v}</b></div>`;
     b.innerHTML=`<div class="pf-done"><span class="medal">${I.check}</span><h3>Ton programme est prêt</h3><p>${GOALS[p.goal][1]} · ${LEVELS[p.level].toLowerCase()}</p></div>
-      <div class="pf-sum">${row('Séances',`${p.freq} par semaine`)}${row('Exercices principaux',`${e0.sets.length} séries de ${e0.sets[0].v} · repos ${restTxt(e0.rest)}`)}${row('Apports conseillés',`${fmtInt(pl.cal)} kcal par jour`)}${row('Protéines',`${pl.prot} g par jour`)}${row('Maintien estimé',`${fmtInt(Math.round(e.tdee/50)*50)} kcal`)}${row('IMC',fmt1(e.bmi))}${tg?row('Poids visé',`${fmt1(tg)} kg${Math.abs(w-tg)>=.1?` · ${fmt1(Math.abs(w-tg))} kg à ${w>tg?'perdre':'prendre'}`:''}`):''}</div>
+      <div class="pf-sum">${row('Séances',`${p.freq} par semaine`)}${row('Au programme',DAYS.map(d=>d.title).join(', '))}${DAYS[0].ex.some(x=>x.id.indexOf('fin-')===0)?row('Fin de séance',`${DAYS[0].ex[DAYS[0].ex.length-1].sets[0].v} min de cardio`):''}${row('Exercices principaux',`${e0.sets.length} séries de ${e0.sets[0].v} · repos ${restTxt(e0.rest)}`)}${row('Apports conseillés',`${fmtInt(pl.cal)} kcal par jour`)}${row('Protéines',`${pl.prot} g par jour`)}${row('Maintien estimé',`${fmtInt(Math.round(e.tdee/50)*50)} kcal`)}${row('IMC',fmt1(e.bmi))}${tg?row('Poids visé',`${fmt1(tg)} kg${Math.abs(w-tg)>=.1?` · ${fmt1(Math.abs(w-tg))} kg à ${w>tg?'perdre':'prendre'}`:''}`):''}</div>
       ${p.age<18?'<p class="hint">Avant 18 ans, l\'app ne propose pas de régime : les apports restent à l\'équilibre.</p>':''}
       <p class="hint">Les apports sont des estimations calculées à partir de ton poids, ta taille et ton âge. Si ton médecin te donne d'autres chiffres, suis les siens.</p>
       <button type="button" class="btn pf-save" data-close>C'est parti</button>
@@ -2572,20 +2613,23 @@ function renderProf(){
   const inp=(k,lab,unit,ph,mode)=>`<label class="frow"><span>${lab}</span><span class="fin"><input id="pf-${k}" inputmode="${mode||'decimal'}" autocomplete="off" placeholder="${ph}" value="${esc(String(PF[k]).replace('.',','))}"><i>${unit}</i></span></label>`;
   b.innerHTML=`<p class="pf-lead">Quelques questions pour régler tes séances, tes apports et ton objectif de poids.</p>
     <div class="set-sec"><h3>Toi</h3><div class="card2 rows"><div class="frow"><span>Sexe</span>${seg('sex',[['m','Homme'],['f','Femme']])}</div>${inp('age','Âge','ans','35','numeric')}${inp('h','Taille','cm','175','numeric')}${inp('w','Poids actuel','kg','80')}${inp('target','Poids visé','kg','facultatif')}</div></div>
-    <div class="set-sec"><h3>Ce que tu attends du programme</h3><div class="opts">${[['perte','Perdre du poids','Séries longues, repos courts, apports réduits'],['muscle','Prendre du muscle','Séries de 8 à 12 plus lourdes, repos plus longs, apports en hausse'],['forme','Me remettre en forme','Reprise régulière, apports à l\'équilibre']].map(([v,t,d])=>`<button type="button" class="opt${on('goal',v)?' on':''}" data-pf="goal" data-v="${v}" aria-pressed="${on('goal',v)}"><span><b>${t}</b><small>${d}</small></span><i>${I.check}</i></button>`).join('')}</div></div>
-    <div class="set-sec"><h3>Ton niveau en salle</h3>${seg('level',[['deb','Débutant'],['inter','Intermédiaire'],['conf','Confirmé']])}<p class="hint">Débutant : 3 séries au plus par exercice. Confirmé : 4 séries partout.</p></div>
-    <div class="set-sec"><h3>Séances par semaine</h3>${seg('freq',[[2,'2'],[3,'3'],[4,'4']])}<p class="hint">À 4 séances, le jour bonus compte dans ta semaine.</p></div>
+    <div class="set-sec"><h3>Ce que tu attends du programme</h3><div class="opts">${[['perte','Perdre du poids','Séries longues, repos courts, 12 min de cardio en fin de séance, apports réduits'],['muscle','Prendre du muscle','Séries de 8 à 12 plus lourdes, repos plus longs, apports en hausse'],['forme','Me remettre en forme','Séances plus courtes (3 séries), 8 min de cardio, apports à l\'équilibre']].map(([v,t,d])=>`<button type="button" class="opt${on('goal',v)?' on':''}" data-pf="goal" data-v="${v}" aria-pressed="${on('goal',v)}"><span><b>${t}</b><small>${d}</small></span><i>${I.check}</i></button>`).join('')}</div></div>
+    <div class="set-sec"><h3>Ton niveau en salle</h3>${seg('level',[['deb','Débutant'],['inter','Intermédiaire'],['conf','Confirmé']])}<p class="hint">Débutant : machines guidées seulement, 3 séries au plus. Confirmé : 4 séries partout.</p></div>
+    <div class="set-sec"><h3>Séances par semaine</h3>${seg('freq',[[2,'2'],[3,'3'],[4,'4']])}<p class="hint">2 séances : corps entier à chaque fois. 3 séances : bas, haut, bas. 4 séances : la séance cardio et mobilité en plus.</p></div>
+    <p class="fl-err" id="pfErr" style="margin-top:18px" hidden></p>
     <button type="button" class="btn pf-save" data-pf-save>${S.prof?'Mettre à jour mon programme':'Créer mon programme'}</button>
     <p class="hint">Les exercices restent sans charge lourde sur la colonne, quel que soit le réglage.</p>`;
 }
 function saveProf(){
   pfRead();
-  const age=Math.round(parseKg(PF.age)||0),h=Math.round(parseKg(PF.h)||0),w=parseKg(PF.w),tg=parseKg(PF.target);
-  if(!(age>=16&&age<=90)){toast('Indique ton âge (entre 16 et 90 ans)');return;}
-  if(!(h>=130&&h<=220)){toast('Indique ta taille en centimètres');return;}
-  if(!(w>=35&&w<=250)){toast('Indique ton poids en kilos');return;}
-  if(tg!=null&&!(tg>=35&&tg<=250)){toast('Le poids visé ne semble pas correct');return;}
-  if(tg!=null&&tg/((h/100)*(h/100))<18.5){toast('Ce poids visé est trop bas pour ta taille');return;}
+  const fail=m=>{const el=$('pfErr');el.textContent=m;el.hidden=false;el.scrollIntoView({block:'center',behavior:'smooth'});};
+  let h=parseKg(PF.h);if(h!=null&&h>=1.3&&h<=2.2)h*=100;h=Math.round(h||0);
+  const age=Math.round(parseKg(PF.age)||0),w=parseKg(PF.w),tg=parseKg(PF.target);
+  if(!(age>=16&&age<=90)){fail('Indique ton âge, entre 16 et 90 ans.');return;}
+  if(!(h>=130&&h<=220)){fail('Indique ta taille en centimètres, par exemple 179.');return;}
+  if(!(w>=35&&w<=250)){fail('Indique ton poids actuel en kilos.');return;}
+  if(tg!=null&&!(tg>=35&&tg<=250)){fail('Le poids visé ne semble pas correct.');return;}
+  if(tg!=null&&tg/((h/100)*(h/100))<18.5){fail('Ce poids visé est trop bas pour ta taille.');return;}
   S.prof={sex:PF.sex==='f'?'f':'m',age,h,w:r1(w),goal:GOALS[PF.goal]?PF.goal:'perte',level:LEVELS[PF.level]?PF.level:'inter',freq:[2,3,4].includes(+PF.freq)?+PF.freq:3,target:tg!=null?r1(tg):null};
   S.profAsked=true;
   const l=lastBw();if(!l||Math.abs(l.kg-w)>.05)upsertBw({d:today(),kg:r1(w),src:'profil'});
@@ -2593,35 +2637,81 @@ function saveProf(){
   save();rerender();PF.step='done';renderProf();$('profSheet').querySelector('.sh-body').scrollTop=0;
 }
 
-/* ================= BODY WEIGHT ================= */
-const SRC={manuel:'Saisie',profil:'Profil',bilan:'Bilan importé',csv:'Fichier importé'};
+/* ================= BODY WEIGHT + BODY COMPOSITION ================= */
+const SRC={manuel:'Saisie',profil:'Profil',bilan:'Bilan importé',csv:'Fichier importé',boditrax:'Boditrax',visbody:'Visbody'};
 const BWF=[['fat','Masse grasse','%',3,70],['mm','Masse musculaire','kg',10,150],['vf','Graisse viscérale','',1,60],['waist','Tour de taille','cm',40,200]];
+/* tracked metrics: key, label, unit, direction that counts as progress (-1 down, 1 up, 0 none) */
+const MET=[['fat','Masse grasse','%',-1],['fm','Masse grasse','kg',-1],['mm','Masse musculaire','kg',1],['smm','Muscle squelettique','kg',1],['ffm','Masse maigre','kg',1],
+  ['vf','Graisse viscérale','',-1],['waist','Tour de taille','cm',-1],['whr','Ratio taille / hanches','',-1],['bmi','IMC','',0],['bmr','Métabolisme de base','kcal',0],['ma','Âge métabolique','ans',-1],
+  ['water','Eau corporelle','kg',0],['icw','Eau intracellulaire','kg',0],['ecw','Eau extracellulaire','kg',0],['ecwr','Eau extra / eau totale','',0],['bone','Masse osseuse','kg',0],['min','Minéraux','kg',0],['prot','Protéines','kg',0],['score','Score du bilan','',1]];
+const SEG=[['LA','Bras gauche'],['RA','Bras droit'],['T','Tronc'],['LL','Jambe gauche'],['RL','Jambe droite']];
+const RAWLAB={PhaseAngleRightLeg:'Angle de phase · jambe droite',PhaseAngleLeftLeg:'Angle de phase · jambe gauche',PhaseAngleRightArm:'Angle de phase · bras droit',PhaseAngleLeftArm:'Angle de phase · bras gauche',PhaseAngleLeftLegLeftArm:'Angle de phase · côté gauche',PhaseAngleRightLegLeftLeg:'Angle de phase · jambes',SarcopeniaSMI:'Indice de masse musculaire (SMI)',SarcopeniaASMBW:'Muscle des membres / poids',MuscleScore:'Score musculaire',LegMuscleScore:'Score musculaire des jambes',BmrScore:'Score du métabolisme'};
+const SEGRE=/^([fm])(LA|RA|T|LL|RL)$/;
+function metInfo(k){
+  const m=MET.find(q=>q[0]===k);if(m)return [m[1],m[2],m[3]];
+  const s=k.match(SEGRE);if(s)return [(s[1]==='f'?'Graisse · ':'Muscle · ')+SEG.find(q=>q[0]===s[2])[1].toLowerCase(),'kg',s[1]==='f'?-1:1];
+  return [RAWLAB[k]||k.replace(/([a-z])([A-Z])/g,'$1 $2'),'',0];
+}
+const mv=(m,k)=>k==='kg'?m.kg:m[k]!=null?m[k]:m.x&&m.x[k]!=null?m.x[k]:null;
+const kindOf=m=>!m.src||m.src==='profil'?'manuel':m.src;
+const bwId=m=>m.d+'~'+kindOf(m);
+const fmtM=v=>{const a=Math.abs(v),q=a<1?1000:a<100?100:a<1000?10:1;return String(Math.round(v*q)/q).replace('.',',').replace('-','−');};
 const I_SCALE=ic('<rect x="4" y="4" width="16" height="16" rx="4.5"/><path d="M8.6 10.2a4.8 4.8 0 0 1 6.8 0"/><path d="M12 10.6l1.3-2"/>',2);
-function upsertBw(m){const i=S.bw.findIndex(x=>x.d===m.d);if(i>=0)S.bw[i]=Object.assign({},S.bw[i],m);else S.bw.push(m);S.bw.sort(byDate);}
-function setBw(m){S.bw=S.bw.filter(x=>x.d!==m.d);S.bw.push(m);S.bw.sort(byDate);if(S.bw.length>500)S.bw.splice(0,S.bw.length-500);}
+function upsertBw(m){const i=S.bw.findIndex(x=>bwId(x)===bwId(m));if(i>=0)S.bw[i]=Object.assign({},S.bw[i],m);else S.bw.push(m);S.bw.sort(byDate);}
+function setBw(m){S.bw=S.bw.filter(x=>bwId(x)!==bwId(m));S.bw.push(m);S.bw.sort(byDate);if(S.bw.length>500)S.bw.splice(0,S.bw.length-500);}
 function afterBw(){if(S.prof&&lastBw())S.prof.w=lastBw().kg;save();rerender();}
 const dYear=k=>{const d=fromKey(k);return d.toLocaleDateString('fr-FR',d.getFullYear()!==new Date().getFullYear()?{day:'numeric',month:'short',year:'numeric'}:{weekday:'short',day:'numeric',month:'short'});};
-const sgn=v=>(v>0?'+':v<0?'−':'')+fmt1(Math.abs(v));
-const bwSeries=()=>S.bw.slice(-60).map(x=>({t:x.d,max:x.kg}));
+const sgn=v=>(v>0?'+':v<0?'−':'')+fmtM(Math.abs(v));
+/* weight: one point per day (the last weigh-in of that day, whatever the device) */
+const bwDays=()=>{const o=[];S.bw.forEach(x=>{if(o.length&&o[o.length-1].d===x.d)o[o.length-1]=x;else o.push(x);});return o;};
+const bwSeries=()=>bwDays().slice(-60).map(x=>({t:x.d,max:x.kg}));
+/* composition: followed device by device, because two devices do not measure the same way */
+const hasComp=m=>BWF.some(q=>m[q[0]]!=null)||!!(m.x&&Object.keys(m.x).length);
+const compSrcs=()=>{const s=[];S.bw.forEach(m=>{const k=kindOf(m);if(hasComp(m)&&!s.includes(k))s.push(k);});return s;};
+const curSrc=()=>{if(compSrcs().includes(S.bsrc))return S.bsrc;for(let i=S.bw.length-1;i>=0;i--)if(hasComp(S.bw[i]))return kindOf(S.bw[i]);return '';};
+const compRows=()=>{const k=curSrc();return S.bw.filter(m=>kindOf(m)===k&&hasComp(m));};
+const metSeries=k=>compRows().filter(m=>mv(m,k)!=null).slice(-60).map(m=>({t:m.d,max:mv(m,k)}));
+function metKeys(E){
+  const has=k=>E.some(m=>mv(m,k)!=null),main=MET.map(q=>q[0]).filter(has),seg=[];
+  SEG.forEach(q=>['m'+q[0],'f'+q[0]].forEach(k=>{if(has(k))seg.push(k);}));
+  const raw=[];E.forEach(m=>{if(m.x)Object.keys(m.x).forEach(k=>{if(!main.includes(k)&&!seg.includes(k)&&!raw.includes(k))raw.push(k);});});
+  return {main,seg,raw,all:main.concat(seg,raw)};
+}
+function compHtml(){
+  const srcs=compSrcs();if(!srcs.length)return '';
+  const cs=curSrc(),E=compRows(),K=metKeys(E);if(!K.all.length)return '';
+  const sel=K.all.includes(S.bmet)?S.bmet:K.all[0],ser=metSeries(sel),info=metInfo(sel),f=ser[0],l=ser[ser.length-1],d=Math.round((l.max-f.max)*1000)/1000;
+  const good=d&&info[2]&&(d>0?1:-1)===info[2];
+  const chip=ser.length<2?'':!d?'<span class="delta">stable</span>':`<span class="delta${good?' up':''}">${d>0?UP:DOWNA}${sgn(d)}${info[1]?' '+info[1]:''}</span>`;
+  const tog=srcs.length>1?`<div class="seg3 n${Math.min(srcs.length,3)} bw-src" role="group" aria-label="Appareil">${srcs.map(s=>`<button type="button" data-bsrc="${esc(s)}" class="${s===cs?'on':''}" aria-pressed="${s===cs}">${esc(SRC[s]||s)}</button>`).join('')}</div><p class="hint bw-note">Chaque appareil mesure à sa façon : les courbes suivent un seul appareil à la fois.</p>`:'';
+  const card=`<article class="pg" id="metCard"><div class="pg-h"><div><div class="pg-n">${esc(info[0])}</div><div class="pg-s">${ser.length<2?`1 bilan ${esc(SRC[cs]||cs)} · le ${dShort(f.t)}`:`${ser.length} bilans ${esc(SRC[cs]||cs)} depuis le ${dShort(f.t)}`}</div></div><div class="pg-v"><b>${fmtM(l.max)}<small>${info[1]}</small></b>${chip}</div></div>
+    <div class="ch-wrap">${chartSvg(ser,'@m:'+sel,info[0],{unit:info[1],min:Math.abs(l.max)<3?.01:Math.abs(l.max)<30?.5:1})}<div class="ch-tip" hidden></div></div>${ser.length<2?'<p class="pg-one">Encore un bilan et la courbe apparaît.</p>':''}</article>`;
+  const cell=k=>{const xs=E.filter(m=>mv(m,k)!=null),v=mv(xs[xs.length-1],k),dd=Math.round((v-mv(xs[0],k))*1000)/1000,i=metInfo(k);return {v,dd,i,n:xs.length};};
+  const tiles=K.main.map(k=>{const c=cell(k);return `<button type="button" data-met="${k}" class="${k===sel?'on':''}" aria-pressed="${k===sel}"><small>${esc(c.i[0])}</small><b>${fmtM(c.v)}<span>${c.i[1]}</span></b><i class="${c.dd&&c.i[2]&&(c.dd>0?1:-1)===c.i[2]?'g':''}">${c.n>1&&c.dd?sgn(c.dd)+(c.i[1]?' '+c.i[1]:''):c.n>1?'stable':'1 bilan'}</i></button>`;}).join('');
+  const sb=k=>E.some(m=>mv(m,k)!=null)?`<button type="button" data-met="${k}" class="${k===sel?'on':''}" aria-label="${esc(metInfo(k)[0])}">${fmtM(cell(k).v)}</button>`:'<span>–</span>';
+  const segs=SEG.filter(q=>K.seg.includes('m'+q[0])||K.seg.includes('f'+q[0]));
+  const seg=segs.length?`<div class="sec-h"><h2>Par segment</h2><span>kg · dernier bilan</span></div><div class="bw-seg"><div class="h"><span></span><span>Muscle</span><span>Graisse</span></div>${segs.map(q=>`<div><span>${q[1]}</span>${sb('m'+q[0])}${sb('f'+q[0])}</div>`).join('')}</div>`:'';
+  const raw=K.raw.length?`<details class="pg-hist bw-raw"${K.raw.includes(sel)?' open':''}><summary>Autres mesures (${K.raw.length}) <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>${K.raw.map(k=>`<button type="button" class="row${k===sel?' on':''}" data-met="${esc(k)}"><span>${esc(metInfo(k)[0])}</span><b>${fmtM(cell(k).v)}</b></button>`).join('')}</details>`:'';
+  return `<div class="sec-h"><h2>Composition</h2><span>${srcs.length>1?'par appareil':'bilans '+esc(SRC[cs]||cs)}</span></div>${tog}${card}<div class="bw-comp">${tiles}</div>${seg}${raw}`;
+}
 function renderBw(){
-  const a=S.bw,el=$('bwView'),p=S.prof;
+  const a=bwDays(),el=$('bwView'),p=S.prof;
   const acts=`<div class="bw-acts"><button type="button" class="btn" data-bw="add">${I.plus}Ajouter une pesée</button><button type="button" class="btn ghost" data-bw="import">${FI.camera}Importer un bilan</button></div>`;
   if(!a.length){
     $('progStats').innerHTML='<div><b>–</b><small>Poids · kg</small></div><div><b>–</b><small>Variation · kg</small></div><div><b>–</b><small>IMC</small></div>';
-    el.innerHTML=`<div class="empty-state">${I_SCALE}<b>Ton suivi du poids commence ici</b><p>Ajoute une pesée à la main, ou importe ton bilan Visbody de Fitness Park : capture d'écran, photo ou PDF du rapport.</p></div>${acts}`;return;}
+    el.innerHTML=`<div class="empty-state">${I_SCALE}<b>Ton suivi du poids commence ici</b><p>Ajoute une pesée à la main, ou importe un bilan de Fitness Park : l'export CSV de Boditrax ou le rapport PDF de Visbody.</p></div>${acts}`;return;}
   const first=a[0],last=a[a.length-1],dl=r1(last.kg-first.kg),bmi=p?last.kg/((p.h/100)*(p.h/100)):null,tg=p&&p.target,down=!(p&&p.goal==='muscle');
   $('progStats').innerHTML=`<div><b>${fmt1(last.kg)}</b><small>Poids · kg</small></div><div><b>${a.length>1?sgn(dl):'–'}</b><small>Variation · kg</small></div><div><b>${bmi?fmt1(bmi):'–'}</b><small>IMC</small></div>`;
   const chip=a.length<2?'':dl===0?'<span class="delta">stable</span>':`<span class="delta${(dl<0)===down?' up':''}">${dl>0?UP:DOWNA}${sgn(dl)} kg</span>`;
-  const sub=a.length<2?`1 pesée · le ${dShort(first.d)}`:`${a.length} pesées depuis le ${dShort(first.d)}`;
+  const sub=a.length<2?`1 pesée · le ${dShort(first.d)}`:`${a.length} jours de pesée depuis le ${dShort(first.d)}`;
   let goal='';
   if(tg){const tot=first.kg-tg,fr=Math.abs(tot)<.05?1:Math.max(0,Math.min(1,(first.kg-last.kg)/tot)),reached=tot>=0?last.kg<=tg+.05:last.kg>=tg-.05;
     goal=`<div class="bw-goal"><div class="jb-h"><span>Objectif ${fmt1(tg)} kg</span><b>${reached?'Atteint':`encore ${fmt1(Math.abs(last.kg-tg))} kg`}</b></div><div class="jb-t"><i style="width:${n((reached?1:fr)*100)}%;background:var(--ok)"></i></div></div>`;}
   const card=`<article class="pg"><div class="pg-h"><div><div class="pg-n">Poids</div><div class="pg-s">${sub}</div></div><div class="pg-v"><b>${fmt1(last.kg)}<small>kg</small></b>${chip}</div></div>
     <div class="ch-wrap">${chartSvg(bwSeries(),'@bw','Poids')}<div class="ch-tip" hidden></div></div>${a.length<2?'<p class="pg-one">Encore une pesée et ta courbe apparaît.</p>':''}${goal}</article>`;
-  const comp=BWF.map(([k,lab,u])=>{const xs=a.filter(x=>x[k]!=null);if(!xs.length)return '';const l=xs[xs.length-1],d=r1(l[k]-xs[0][k]);
-    return `<div><small>${lab}</small><b>${fmt1(l[k])}<span>${u}</span></b><i class="${d&&(d<0)===(k!=='mm')?'g':''}">${xs.length>1&&d?`${sgn(d)}${u?' '+u:''} depuis le ${dShort(xs[0].d)}`:`le ${dShort(l.d)}`}</i></div>`;}).join('');
-  const rows=a.slice().reverse().slice(0,80).map(x=>`<button type="button" class="jitem" data-bwd="${esc(x.d)}"><span style="min-width:0"><b>${esc(cap(dYear(x.d)))}</b><small>${[x.fat!=null?`${fmt1(x.fat)} % de graisse`:'',x.mm!=null?`${fmt1(x.mm)} kg de muscle`:'',x.waist!=null?`taille ${fmt1(x.waist)} cm`:'',SRC[x.src]||''].filter(Boolean).join(' · ')||'Pesée'}</small></span><span class="kc">${fmt1(x.kg)}<small>kg</small></span></button>`).join('');
-  el.innerHTML=card+acts+(comp?`<div class="sec-h"><h2>Composition</h2><span>dernier bilan</span></div><div class="bw-comp">${comp}</div>`:'')+`<div class="sec-h"><h2>Historique</h2><span>${a.length} pesée${a.length>1?'s':''}</span></div>${rows}`;
+  const rows=S.bw.slice().reverse().slice(0,120).map(x=>{const nx=(x.x?Object.keys(x.x).length:0)+BWF.filter(q=>x[q[0]]!=null).length;
+    return `<button type="button" class="jitem" data-bwd="${esc(bwId(x))}"><span style="min-width:0"><b>${esc(cap(dYear(x.d)))}</b><small>${[SRC[x.src]||'Pesée',x.fat!=null?`${fmt1(x.fat)} % de graisse`:'',x.mm!=null?`${fmt1(x.mm)} kg de muscle`:'',nx>3?`${nx+1} mesures`:''].filter(Boolean).join(' · ')}</small></span><span class="kc">${fmt1(x.kg)}<small>kg</small></span></button>`;}).join('');
+  el.innerHTML=card+acts+compHtml()+`<div class="sec-h"><h2>Historique</h2><span>${S.bw.length} pesée${S.bw.length>1?'s':''}</span></div>${rows}`;
 }
 let W=null,bwDelArmed=0;
 function openBw(st){W=Object.assign({step:'form',d:today(),kg:'',fat:'',mm:'',vf:'',waist:''},st);bwDelArmed=0;renderBwSheet();openSheetEl($('bwSheet'));}
@@ -2631,16 +2721,19 @@ function renderBwSheet(){
   $('bwTitle').textContent=W.step==='form'?(W.edit?'Modifier la pesée':'Ajouter une pesée'):'Importer un bilan';
   if(W.step==='loading'){b.innerHTML=`<div class="fl-load"><span class="spin" aria-hidden="true"></span><b>${W.msg}</b>${W.sub?`<p>${W.sub}</p>`:''}${W.ctl?'<button type="button" class="btn ghost" data-w="stop" style="flex:none;width:auto;padding:0 22px">Arrêter</button>':''}</div>`;return;}
   if(W.step==='intro'){
-    b.innerHTML=`<div class="fl-step"><p>Après ton passage sur le scanner Visbody, ouvre ton rapport sur ton téléphone et fais-en une capture d'écran, ou enregistre-le en PDF. Choisis ensuite le fichier ici : Claude y lit le poids, la masse grasse, le muscle, la graisse viscérale et le tour de taille.</p>
-      <button type="button" class="btn" data-w="file">${FI.camera}Choisir une capture ou un PDF</button>
-      ${aiReady()?'':`<p class="fl-err">${IS_PWA?'La lecture des bilans utilise ta clé API Anthropic : ajoute-la dans les réglages.':'La lecture par Claude n\'est pas disponible ici pour le moment.'}</p>`}
-      <p class="hint" style="margin:0">Un fichier CSV exporté par une balance connectée fonctionne aussi : il est lu directement sur ton appareil.</p>
+    b.innerHTML=`<div class="fl-step"><p>Choisis l'export de ta balance <b>Boditrax</b> (fichier CSV) ou le rapport de ton scanner <b>Visbody</b> (fichier PDF). Toutes les mesures sont lues directement sur ton appareil, sans clé API, et s'ajoutent à tes courbes.</p>
+      <button type="button" class="btn" data-w="file">Choisir un fichier</button>
+      <p class="hint" style="margin:0">Une capture d'écran ou une photo de bilan fonctionne aussi : elle est lue par Claude${aiReady()?'':IS_PWA?' (il faut alors ta clé API, dans les réglages)':' (indisponible ici pour le moment)'}.</p>
       <button type="button" class="btn ghost" data-w="manual">Saisie manuelle</button></div>`;return;}
   if(W.step==='error'){b.innerHTML=`<div class="fl-step"><p class="fl-err">${W.err}</p><button type="button" class="btn" data-w="file">Choisir un autre fichier</button><button type="button" class="btn ghost" data-w="manual">Saisie manuelle</button></div>`;return;}
-  if(W.step==='review'){const ms=W.found;
-    b.innerHTML=`<div class="fl-step"><p>${ms.length} pesées trouvées. Celles qui existent déjà à la même date seront remplacées.</p>
-      <div class="bw-found">${ms.slice().reverse().map(m=>`<div class="row"><span>${esc(cap(dYear(m.d)))}</span><b>${fmt1(m.kg)} kg${m.fat!=null?` <small>· ${fmt1(m.fat)} %</small>`:''}</b></div>`).join('')}</div>
-      <button type="button" class="btn" data-w="confirm">Importer ${ms.length} pesées</button><button type="button" class="btn ghost" data-w="file">Choisir un autre fichier</button></div>`;return;}
+  if(W.step==='review'){const ms=W.found,one=ms.length===1,m0=ms[ms.length-1],name=SRC[m0.src]||'Bilan',dup=ms.filter(m=>S.bw.some(x=>bwId(x)===bwId(m))).length;
+    let list;
+    if(one){const K=metKeys(ms),row=(l,v,u)=>`<div class="row"><span>${esc(l)}</span><b>${v}${u?' '+u:''}</b></div>`;
+      list=row('Poids',fmtM(m0.kg),'kg')+K.all.map(k=>{const i=metInfo(k);return row(i[0],fmtM(mv(m0,k)),i[1]);}).join('');}
+    else list=ms.slice().reverse().map(m=>`<div class="row"><span>${esc(cap(dYear(m.d)))}</span><b>${fmt1(m.kg)} kg${m.fat!=null?` <small>· ${fmt1(m.fat)} %</small>`:''}</b></div>`).join('');
+    b.innerHTML=`<div class="fl-step"><p>${one?`Bilan <b>${esc(name)}</b> du <b>${esc(dYear(m0.d))}</b> : ${metKeys(ms).all.length+1} mesures lues.`:`<b>${ms.length} bilans ${esc(name)}</b> trouvés.`}${dup?` ${dup>1?'Ceux qui existent':'Celui qui existe'} déjà à la même date ${dup>1?'seront remplacés':'sera remplacé'}.`:''}</p>
+      <div class="bw-found">${list}</div>
+      <button type="button" class="btn" data-w="confirm">${one?'Importer ce bilan':`Importer ${ms.length} bilans`}</button><button type="button" class="btn ghost" data-w="file">Choisir un autre fichier</button></div>`;return;}
   b.innerHTML=`<div class="fl-rev">
     ${W.note?`<div class="fl-items"><b>Lu sur ton bilan</b>${W.note}</div>`:''}
     <label class="fld"><span>Date</span><input id="w-d" type="date" max="${today()}" value="${esc(W.d)}"></label>
@@ -2654,15 +2747,17 @@ function saveBw(){
   const d=$('w-d').value||today(),kg=parseKg($('w-kg').value);
   if(!/^\d{4}-\d{2}-\d{2}$/.test(d)||d>today()){toast('Choisis une date passée ou aujourd\'hui');return;}
   if(!(kg>=30&&kg<=300)){toast('Indique ton poids en kilos');return;}
-  const m={d,kg:r1(kg),src:W.src||'manuel'};
+  const m={d,kg:Math.round(kg*100)/100,src:W.src||'manuel'};if(W.x)m.x=W.x;if(W.t)m.t=W.t;
   BWF.forEach(([k,,,lo,hi])=>{const v=parseKg($('w-'+k).value);if(v!=null&&v>=lo&&v<=hi)m[k]=r1(v);});
-  if(W.edit){if(W.edit!==d)S.bw=S.bw.filter(x=>x.d!==W.edit);setBw(m);}else upsertBw(m);
+  if(W.edit){S.bw=S.bw.filter(x=>bwId(x)!==W.edit);setBw(m);}else upsertBw(m);
   afterBw();closeSheetEl($('bwSheet'));toast(W.edit?'Pesée modifiée':'Pesée ajoutée');
 }
 function cleanBw(list){
   const t=today(),out={};
-  list.forEach(m=>{const kg=+m.kg;if(!(kg>=30&&kg<=300))return;const o={d:m.d&&m.d<=t?m.d:t,kg:r1(kg),src:m.src};
-    BWF.forEach(([k,,,lo,hi])=>{const v=m[k]==null?null:+m[k];if(v!=null&&isFinite(v)&&v>=lo&&v<=hi)o[k]=r1(v);});out[o.d]=o;});
+  list.forEach(m=>{const kg=+m.kg;if(!(kg>=30&&kg<=300))return;const o={d:m.d&&m.d<=t?m.d:t,kg:Math.round(kg*100)/100,src:m.src};if(m.t)o.t=m.t;
+    BWF.forEach(([k,,,lo,hi])=>{const v=m[k]==null?null:+m[k];if(v!=null&&isFinite(v)&&v>=lo&&v<=hi)o[k]=r1(v);});
+    if(m.x){const x={};Object.keys(m.x).forEach(k=>{const v=+m.x[k];if(m.x[k]!=null&&isFinite(v))x[k]=Math.round(v*1000)/1000;});if(Object.keys(x).length)o.x=x;}
+    const id=bwId(o),q=out[id];if(!q||(q.t||'')<=(o.t||''))out[id]=o;});
   return Object.values(out).sort(byDate);
 }
 /* dates and numbers as files write them */
@@ -2716,9 +2811,68 @@ function fromAI(r){
   return cleanBw(ms.map(m=>{const kg=numLoose(m.poids_kg),fm=numLoose(m.masse_grasse_kg);let fat=numLoose(m.masse_grasse_pct);if(fat==null&&fm!=null&&kg)fat=fm/kg*100;
     return {d:parseDateAny(m.date),kg,fat,mm:numLoose(m.masse_musculaire_kg),vf:numLoose(m.graisse_viscerale),waist:numLoose(m.tour_taille_cm),src:'bilan',nod:!parseDateAny(m.date)};}));
 }
+/* Boditrax account export: sections of text, scans as "Metric,Value,Date" lines where a decimal comma splits the value in two */
+const BTX={BodyWeight:'kg',FatMass:'fm',MuscleMass:'mm',FatFreeMass:'ffm',WaterMass:'water',IntraCellularWaterMass:'icw',ExtraCellularWaterMass:'ecw',BoneMass:'bone',VisceralFatRating:'vf',BodyMassIndex:'bmi',MetabolicAge:'ma',BoditraxScore:'score',
+  LeftArmFatMass:'fLA',RightArmFatMass:'fRA',TrunkFatMass:'fT',LeftLegFatMass:'fLL',RightLegFatMass:'fRL',LeftArmMuscleMass:'mLA',RightArmMuscleMass:'mRA',TrunkMuscleMass:'mT',LeftLegMuscleMass:'mLL',RightLegMuscleMass:'mRL'};
+const isBoditrax=t=>/BodyMetricTypeId|User Scan Details/i.test(t);
+function parseBoditrax(text){
+  const scans={};let on=false;
+  String(text).replace(/^﻿/,'').split(/\r?\n/).forEach(line=>{
+    line=line.trim();if(!line)return;
+    if(/^"?User Scan Details/i.test(line)){on=true;return;}
+    if(/^"?User [A-Za-z ]+Details/i.test(line)){on=false;return;}
+    if(!on||/^"?BodyMetricTypeId/i.test(line))return;
+    const q=line.split(line.indexOf(';')>=0?';':',').map(x=>x.trim().replace(/^"|"$/g,''));if(q.length<3)return;
+    const name=q[0],when=q[q.length-1],v=parseFloat(q.slice(1,-1).join('.').replace(',','.')),d=parseDateAny(when);
+    if(!d||!isFinite(v)||!/^[A-Za-z][A-Za-z0-9]*$/.test(name))return;
+    const tm=when.match(/(\d{1,2}):(\d{2})/),t=tm?tm[1].padStart(2,'0')+':'+tm[2]:'',key=d+' '+t;
+    (scans[key]||(scans[key]={d,t,r:{}})).r[name]=v;});
+  return cleanBw(Object.values(scans).map(sc=>{const r=sc.r,x={},m={d:sc.d,t:sc.t,src:'boditrax'};
+    Object.keys(r).forEach(nm=>{if(nm==='Height'||nm==='Age')return;if(nm==='BasalMetabolicRatekJ'){x.bmr=Math.round(r[nm]/4.184);return;}
+      const k=BTX[nm];if(k==='kg')m.kg=r[nm];else if(k==='mm'||k==='vf')m[k]=r[nm];else x[k||nm]=r[nm];});
+    if(m.kg&&x.fm!=null)m.fat=x.fm/m.kg*100;m.x=x;return m;}));
+}
+/* Visbody "Rapport Composition corporelle": read from the text of the PDF, placed by position on the page */
+function parseVisbody(items,pageW){
+  if(!/composition corporelle|tgc|mgc/.test(plain(items.map(i=>i.s).join(' '))))return null;
+  const num=t=>{const m=String(t).match(/^-?\d+(?:\.\d+)?/);return m?parseFloat(m[0]):null;};
+  const isVal=i=>/^-?\d/.test(i.s)&&!/^\d{4}-\d{2}/.test(i.s),L=pageW*.2,R=pageW*.62;
+  const rowVal=re=>{for(const lab of items){if(lab.x>L||!re.test(plain(lab.s)))continue;
+    const c=items.filter(i=>isVal(i)&&i.x<R&&i.x>lab.x+lab.w-2&&Math.abs(i.y-lab.y)<=9).sort((a,b)=>a.x-b.x)[0];if(c)return num(c.s);}return null;};
+  const under=re=>{const h=items.find(i=>re.test(plain(i.s))&&i.x>L&&i.x<R);if(!h)return null;
+    const c=items.filter(i=>/^\d+(\.\d+)? ?\[/.test(i.s)&&i.y<h.y&&i.y>h.y-110&&i.x>h.x-25&&i.x<h.x+h.w+12).sort((a,b)=>b.y-a.y)[0];return c?num(c.s):null;};
+  const kg=rowVal(/^poids/);if(kg==null)return null;
+  const x={},put=(k,v)=>{if(v!=null)x[k]=v;};
+  put('fm',rowVal(/^mgc/));put('ffm',rowVal(/^mmc/));put('smm',rowVal(/^mms/));put('water',rowVal(/^eau corporelle/));put('icw',rowVal(/^eau intracellulaire/));put('ecw',rowVal(/^eau extracellulaire/));
+  put('ecwr',rowVal(/^ratio ecw/));put('bmi',rowVal(/^imc/));put('whr',rowVal(/^rth/));put('bmr',rowVal(/^mb\b/));put('ma',rowVal(/^age metabolique/));put('min',under(/^sel inorganique/));put('prot',under(/^masse de proteine/));
+  const sc=items.map(i=>i.s.match(/^Note\s+(\d+(?:\.\d+)?)/)).find(Boolean);if(sc)x.score=parseFloat(sc[1]);
+  const seg=(re,pre)=>{const h=items.find(i=>re.test(plain(i.s)));if(!h)return;
+    const ns=items.filter(i=>/^\d+\.\d+$/.test(i.s)&&i.x>h.x-12&&i.y<h.y-8&&i.y>h.y-112).sort((a,b)=>b.y-a.y||a.x-b.x);if(ns.length!==5)return;
+    const arms=ns.slice(0,2).sort((a,b)=>a.x-b.x),legs=ns.slice(3).sort((a,b)=>a.x-b.x);
+    x[pre+'LA']=num(arms[0].s);x[pre+'RA']=num(arms[1].s);x[pre+'T']=num(ns[2].s);x[pre+'LL']=num(legs[0].s);x[pre+'RL']=num(legs[1].s);};
+  seg(/^masse graisseuse par segment/,'f');seg(/^masse musculaire par segment/,'m');
+  const dt=items.map(i=>i.s.match(/(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2})/)).find(Boolean)||items.map(i=>i.s.match(/(\d{4}-\d{2}-\d{2})/)).find(Boolean);
+  const m={d:dt?dt[1]:null,t:dt&&dt[2]?dt[2]:'',kg,src:'visbody',x};
+  const fat=rowVal(/^tgc/),mm=rowVal(/^masse musculaire/),vf=rowVal(/^niveau de graisse/);
+  if(fat!=null)m.fat=fat;else if(x.fm!=null)m.fat=x.fm/kg*100;if(mm!=null)m.mm=mm;if(vf!=null)m.vf=vf;
+  return m;
+}
 const PDF_URL='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',PDF_WORKER='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 let pdfP=null;
-function loadPdfJs(){return pdfP||(pdfP=new Promise((ok,ko)=>{const s=document.createElement('script');s.src=PDF_URL;s.onload=()=>{const L=window.pdfjsLib;if(!L){pdfP=null;ko({code:'pdf'});return;}L.GlobalWorkerOptions.workerSrc=PDF_WORKER;ok(L);};s.onerror=()=>{pdfP=null;ko({code:'pdf'});};document.head.appendChild(s);}));}
+const loadScript=src=>new Promise((ok,ko)=>{const el=document.createElement('script');el.src=src;el.onload=()=>ok();el.onerror=()=>ko({code:'pdf'});document.head.appendChild(el);});
+/* the worker file is loaded on the page first, so pdf.js reads the document without starting a separate worker */
+function loadPdfJs(){return pdfP||(pdfP=loadScript(PDF_WORKER).catch(()=>{}).then(()=>loadScript(PDF_URL)).then(()=>{const L=window.pdfjsLib;if(!L)throw {code:'pdf'};L.GlobalWorkerOptions.workerSrc=PDF_WORKER;return L;}).catch(()=>{pdfP=null;throw {code:'pdf'};}));}
+async function pdfReports(file){
+  let L,doc;
+  try{L=await loadPdfJs();doc=await L.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;}catch(e){throw {code:'pdf'};}
+  const out=[];
+  for(let i=1;i<=Math.min(12,doc.numPages);i++){
+    const pg=await doc.getPage(i),tc=await pg.getTextContent(),w=pg.getViewport({scale:1}).width;
+    const m=parseVisbody(tc.items.map(it=>({s:String(it.str||'').trim(),x:it.transform[4],y:it.transform[5],w:it.width||0})).filter(it=>it.s),w);
+    if(m)out.push(m);
+  }
+  return cleanBw(out);
+}
 async function pdfPages(file,max){
   let L,doc;
   try{L=await loadPdfJs();doc=await L.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;}catch(e){throw {code:'pdf'};}
@@ -2732,24 +2886,34 @@ async function pdfPages(file,max){
 }
 async function runBwFile(file){
   const name=(file.name||'').toLowerCase(),type=file.type||'';
-  const isPdf=type==='application/pdf'||/\.pdf$/.test(name),isImg=/^image\//.test(type)||/\.(jpe?g|png|heic|heif|webp)$/.test(name);
+  let isPdf=type==='application/pdf'||/\.pdf$/.test(name);const isImg=/^image\//.test(type)||/\.(jpe?g|png|heic|heif|webp)$/.test(name);
   openBw({step:'loading',msg:'Lecture du fichier…'});
   let ctl=null;
+  const askAI=async src=>{
+    if(!aiReady())throw {code:IS_PWA?'no_key':'no_ai'};
+    ctl=new AbortController();Object.assign(W,{ctl,msg:'Claude lit ton bilan…',sub:'En général 10 à 30 secondes.'});renderBwSheet();
+    const r=await analyze(BW_PROMPT,await src(),ctl.signal);
+    if(!W||W.ctl!==ctl)return null;
+    W.ctl=null;return fromAI(r);
+  };
   try{
+    if(!isPdf&&!isImg){try{isPdf=new TextDecoder().decode(new Uint8Array(await file.slice(0,5).arrayBuffer())).indexOf('%PDF')===0;}catch(e){}}
     let found;
-    if(isPdf||isImg){
-      if(!aiReady())throw {code:IS_PWA?'no_key':'no_ai'};
-      ctl=new AbortController();Object.assign(W,{ctl,msg:'Claude lit ton bilan…',sub:'En général 10 à 30 secondes.'});renderBwSheet();
-      let r;
-      if(isImg)r=await analyze(BW_PROMPT,{images:[(await prepImage(file,2000)).blob]},ctl.signal);
-      else if(IS_PWA)r=await analyze(BW_PROMPT,{pdf:file},ctl.signal);
-      else r=await analyze(BW_PROMPT,{images:await pdfPages(file,3)},ctl.signal);
-      if(!W||W.ctl!==ctl)return;
-      W.ctl=null;found=fromAI(r);
-    }else found=parseBwText(await file.text());
-    if(!W)return;
+    if(isPdf){
+      let pdfKo=false;
+      try{found=await pdfReports(file);}catch(e){pdfKo=true;found=[];}
+      if(!W)return;
+      if(!found.length){
+        if(!aiReady())throw {code:pdfKo?'pdf':'none'};
+        found=await askAI(async()=>IS_PWA?{pdf:file}:{images:await pdfPages(file,3)});
+      }
+    }
+    else if(isImg)found=await askAI(async()=>({images:[(await prepImage(file,2000)).blob]}));
+    else{const txt=await file.text();found=isBoditrax(txt)?parseBoditrax(txt):parseBwText(txt);}
+    if(!W||found==null)return;
     if(!found.length)throw {code:'none'};
-    if(found.length===1){const m=found[0];
+    const m=found[0];
+    if(found.length===1&&!m.x){
       Object.assign(W,{step:'form',d:m.d,kg:m.kg,fat:m.fat??'',mm:m.mm??'',vf:m.vf??'',waist:m.waist??'',src:m.src,note:'Vérifie les valeurs et la date avant d\'enregistrer.'});}
     else Object.assign(W,{step:'review',found});
     renderBwSheet();
@@ -2758,8 +2922,8 @@ async function runBwFile(file){
     if(e&&e.code==='cancelled'){closeSheetEl($('bwSheet'));return;}
     const c=e&&e.code;
     W.step='error';
-    W.err=c==='none'?(isPdf||isImg?'Je ne trouve pas de poids sur ce document. Essaie avec une capture d\'écran de la page où il apparaît.':'Je ne reconnais pas ce fichier : il lui faut une colonne de dates et une colonne de poids.')
-      :c==='pdf'?'Ce PDF ne s\'ouvre pas ici. Fais une capture d\'écran du rapport et importe l\'image.'
+    W.err=c==='none'?(isPdf?'Je ne reconnais pas ce PDF : il me faut le « Rapport Composition corporelle » de Visbody. Tu peux aussi importer une capture d\'écran du rapport.':isImg?'Je ne trouve pas de poids sur cette image. Essaie avec une capture de la page où il apparaît.':'Je ne reconnais pas ce fichier : il me faut l\'export CSV de Boditrax, ou un tableau avec une colonne de dates et une colonne de poids.')
+      :c==='pdf'?'Ce PDF ne s\'ouvre pas ici (le lecteur de PDF n\'a pas pu se charger). Vérifie ta connexion, ou importe une capture d\'écran du rapport.'
       :c==='no_ai'?'La lecture par Claude n\'est pas disponible ici pour le moment. Tu peux saisir la pesée à la main.'
       :aiErr(e);
     renderBwSheet();
@@ -2769,8 +2933,10 @@ async function runBwFile(file){
 $('pseg').addEventListener('click',ev=>{const b=ev.target.closest('[data-pv]');if(!b)return;S.pview=b.dataset.pv;save();renderProg();});
 $('bwView').addEventListener('click',ev=>{
   const a=ev.target.closest('[data-bw]');if(a){openBw(a.dataset.bw==='add'?{}:{step:'intro'});return;}
-  const r=ev.target.closest('[data-bwd]');if(!r)return;const x=S.bw.find(y=>y.d===r.dataset.bwd);
-  if(x)openBw({edit:x.d,d:x.d,kg:x.kg,fat:x.fat??'',mm:x.mm??'',vf:x.vf??'',waist:x.waist??'',src:x.src});
+  const sb=ev.target.closest('[data-bsrc]');if(sb){S.bsrc=sb.dataset.bsrc;save();renderBw();return;}
+  const mt=ev.target.closest('[data-met]');if(mt){S.bmet=mt.dataset.met;save();renderBw();const c=$('metCard');if(c)c.scrollIntoView({block:'center',behavior:RM?'auto':'smooth'});return;}
+  const r=ev.target.closest('[data-bwd]');if(!r)return;const x=S.bw.find(y=>bwId(y)===r.dataset.bwd);
+  if(x)openBw({edit:bwId(x),d:x.d,kg:x.kg,fat:x.fat??'',mm:x.mm??'',vf:x.vf??'',waist:x.waist??'',src:x.src,x:x.x,t:x.t});
 });
 ['pointermove','pointerdown'].forEach(t=>$('bwView').addEventListener(t,ev=>{const svg=ev.target.closest('svg.ch');if(svg)chartHover(svg,ev.clientX);}));
 $('bwView').addEventListener('pointerout',ev=>{const svg=ev.target.closest('svg.ch');if(svg&&!svg.contains(ev.relatedTarget))chartLeave(svg);});
@@ -2780,9 +2946,9 @@ $('bwBody').addEventListener('click',ev=>{
   if(a==='manual'){Object.assign(W,{step:'form',note:''});renderBwSheet();return;}
   if(a==='stop'){if(W.ctl)W.ctl.abort();return;}
   if(a==='save'){saveBw();return;}
-  if(a==='confirm'){const k=W.found.length;W.found.forEach(setBw);afterBw();closeSheetEl($('bwSheet'));toast(k+' pesées importées');return;}
+  if(a==='confirm'){const k=W.found.length,lm=W.found[k-1];W.found.forEach(setBw);if(hasComp(lm))S.bsrc=kindOf(lm);afterBw();closeSheetEl($('bwSheet'));toast(k>1?k+' bilans importés':'Bilan importé');return;}
   if(a==='del'){if(!bwDelArmed){bwDelArmed=1;renderBwSheet();setTimeout(()=>{if(bwDelArmed&&W){bwDelArmed=0;if(W.step==='form')renderBwSheet();}},3500);return;}
-    S.bw=S.bw.filter(x=>x.d!==W.edit);afterBw();closeSheetEl($('bwSheet'));toast('Pesée supprimée');}
+    S.bw=S.bw.filter(x=>bwId(x)!==W.edit);afterBw();closeSheetEl($('bwSheet'));toast('Pesée supprimée');}
 });
 $('bwIn').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(f)runBwFile(f);});
 $('profBody').addEventListener('click',ev=>{
@@ -2824,7 +2990,7 @@ const remoteReady=initRemote().then(()=>true);
 Promise.all([splashDone,Promise.race([remoteReady,new Promise(r=>setTimeout(()=>r(false),5000))])]).then(([,ok])=>{if(ok&&!S.prof&&!S.profAsked&&!anySheetOpen()&&$('doneModal').hidden)openProf();});
 initSample();
 if(IS_PWA&&navigator.storage&&navigator.storage.persist){try{navigator.storage.persist();}catch(e){}}
-window.__fp={readBackup,DAYS,drawEx,openEx,toggleSet,showDone,S:()=>S,openProf,openBw,parseBwText,fromAI,parseDateAny,rerender,phases,runBwFile};
+window.__fp={readBackup,parseBoditrax,parseVisbody,DAYS,drawEx,openEx,toggleSet,showDone,S:()=>S,openProf,openBw,parseBwText,fromAI,parseDateAny,rerender,phases,runBwFile};
 
 </script>
 <script>if('serviceWorker' in navigator){var hadSW=!!navigator.serviceWorker.controller,swReload=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(hadSW&&!swReload){swReload=true;location.reload();}});window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(function(r){document.addEventListener('visibilitychange',function(){if(!document.hidden)r.update().catch(function(){});});}).catch(function(){});});}</script>
