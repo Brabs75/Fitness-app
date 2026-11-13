@@ -1,5 +1,5 @@
 /* Offline support: the page comes from the network when it answers quickly, otherwise from the cache. */
-const CACHE = 'programme-v14';
+const CACHE = 'programme-v15';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './apple-touch-icon.png', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => Promise.all(ASSETS.map(a => c.add(a).catch(() => {})))).then(() => self.skipWaiting()));
